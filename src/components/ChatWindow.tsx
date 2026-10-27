@@ -21,17 +21,11 @@ export default function ChatWindow({ chat, onSendMessage, onBack }: ChatWindowPr
     scrollToBottom();
   }, [chat.messages]);
 
-  const handleSend = (text: string) => {
-    onSendMessage(chat.id, text);
-  };
-
-  // Determine if we should show tail (first message in group)
   const shouldShowTail = (index: number) => {
     if (index === 0) return true;
     return chat.messages[index].senderId !== chat.messages[index - 1].senderId;
   };
 
-  // Group messages by date
   const groupMessagesByDate = () => {
     const groups: { date: string; messages: { message: typeof chat.messages[0]; index: number }[] }[] = [];
     let currentDate = '';
@@ -56,33 +50,32 @@ export default function ChatWindow({ chat, onSendMessage, onBack }: ChatWindowPr
   const messageGroups = groupMessagesByDate();
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full relative overflow-hidden">
+      {/* Background orbs for chat */}
+      <div className="bg-orb w-96 h-96 bg-violet-600 -top-40 -right-40 opacity-10" />
+      <div className="bg-orb w-72 h-72 bg-cyan-500 -bottom-20 -left-20 opacity-10" />
+
       <ChatHeader chat={chat} onBack={onBack} />
 
       {/* Messages area */}
-      <div
-        className="flex-1 overflow-y-auto px-4 py-2"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23182533' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          backgroundColor: '#0e1621',
-        }}
-      >
+      <div className="flex-1 overflow-y-auto px-3 sm:px-6 py-4 relative z-10">
         {messageGroups.map((group) => (
           <div key={group.date}>
             {/* Date separator */}
-            <div className="flex justify-center my-3">
-              <span className="bg-[#182533]/80 text-[#6c7883] text-[13px] px-3 py-1 rounded-full backdrop-blur-sm">
+            <div className="flex justify-center my-4">
+              <span className="glass-light text-gray-400 text-[11px] font-medium px-4 py-1.5 rounded-full backdrop-blur-md">
                 {group.date}
               </span>
             </div>
 
             {/* Messages */}
-            {group.messages.map(({ message, index }) => (
+            {group.messages.map(({ message, index }, groupMsgIndex) => (
               <MessageBubble
                 key={message.id}
                 message={message}
                 isOwn={message.senderId === currentUser.id}
                 showTail={shouldShowTail(index)}
+                isLast={index === chat.messages.length - 1}
               />
             ))}
           </div>
@@ -90,12 +83,12 @@ export default function ChatWindow({ chat, onSendMessage, onBack }: ChatWindowPr
 
         {/* Typing indicator */}
         {chat.isTyping && (
-          <div className="flex justify-start mt-2">
-            <div className="bg-[#182533] px-4 py-2 rounded-lg rounded-tl-none">
-              <div className="flex gap-1">
-                <span className="w-2 h-2 bg-[#6c7883] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                <span className="w-2 h-2 bg-[#6c7883] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                <span className="w-2 h-2 bg-[#6c7883] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+          <div className="flex justify-start mt-3 animate-fade-in-up">
+            <div className="glass-light px-4 py-3 rounded-2xl rounded-tl-md shadow-lg shadow-black/5">
+              <div className="flex gap-1.5 items-center">
+                <span className="w-2 h-2 bg-violet-400 rounded-full typing-dot-1" />
+                <span className="w-2 h-2 bg-violet-400 rounded-full typing-dot-2" />
+                <span className="w-2 h-2 bg-violet-400 rounded-full typing-dot-3" />
               </div>
             </div>
           </div>
@@ -104,7 +97,7 @@ export default function ChatWindow({ chat, onSendMessage, onBack }: ChatWindowPr
         <div ref={messagesEndRef} />
       </div>
 
-      <MessageInput onSendMessage={handleSend} />
+      <MessageInput onSendMessage={(text) => onSendMessage(chat.id, text)} />
     </div>
   );
 }

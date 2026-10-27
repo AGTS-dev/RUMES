@@ -4,9 +4,10 @@ interface MessageBubbleProps {
   message: Message;
   isOwn: boolean;
   showTail: boolean;
+  isLast: boolean;
 }
 
-export default function MessageBubble({ message, isOwn, showTail }: MessageBubbleProps) {
+export default function MessageBubble({ message, isOwn, showTail, isLast }: MessageBubbleProps) {
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
   };
@@ -14,21 +15,21 @@ export default function MessageBubble({ message, isOwn, showTail }: MessageBubbl
   const getStatusIcon = () => {
     if (message.status === 'read') {
       return (
-        <svg className="w-4 h-4 text-[#5ca0d4] inline-block ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M2 12l5 5L20 4" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M8 12l5 5L26 4" strokeLinecap="round" strokeLinejoin="round" />
+        <svg className="w-3.5 h-3.5 text-cyan-400 inline-block ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+          <path d="M1 12l5 5L17 6" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M7 12l5 5L23 6" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       );
     } else if (message.status === 'delivered') {
       return (
-        <svg className="w-4 h-4 text-[#6c7883] inline-block ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M2 12l5 5L20 4" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M8 12l5 5L26 4" strokeLinecap="round" strokeLinejoin="round" />
+        <svg className="w-3.5 h-3.5 text-gray-500 inline-block ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+          <path d="M1 12l5 5L17 6" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M7 12l5 5L23 6" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       );
     } else {
       return (
-        <svg className="w-3.5 h-3.5 text-[#6c7883] inline-block ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg className="w-3 h-3 text-gray-500 inline-block ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
           <path d="M5 12l5 5L20 7" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       );
@@ -36,19 +37,29 @@ export default function MessageBubble({ message, isOwn, showTail }: MessageBubbl
   };
 
   return (
-    <div className={`flex ${isOwn ? 'justify-end' : 'justify-start'} mb-0.5 ${showTail ? 'mt-2' : ''}`}>
+    <div
+      className={`flex ${isOwn ? 'justify-end' : 'justify-start'} ${showTail ? 'mt-3' : 'mt-0.5'} ${
+        isLast ? (isOwn ? 'message-own' : 'message-other') : ''
+      }`}
+    >
       <div
-        className={`relative max-w-[70%] px-3 py-1.5 rounded-lg ${
+        className={`relative max-w-[75%] sm:max-w-[65%] px-3.5 py-2 transition-all duration-200 ${
           isOwn
-            ? 'bg-[#2b5278] text-white'
-            : 'bg-[#182533] text-white'
-        } ${showTail ? (isOwn ? 'rounded-tr-none' : 'rounded-tl-none') : ''}`}
+            ? showTail
+              ? 'rounded-2xl rounded-tr-md bg-gradient-to-br from-violet-600 to-violet-700 shadow-lg shadow-violet-500/10'
+              : 'rounded-2xl rounded-tr-md bg-gradient-to-br from-violet-600 to-violet-700'
+            : showTail
+              ? 'rounded-2xl rounded-tl-md glass-light shadow-lg shadow-black/5'
+              : 'rounded-2xl rounded-tl-md glass-light'
+        }`}
       >
-        <span className="text-[14.5px] leading-relaxed break-words">{message.text}</span>
-        <span className="float-right mt-1 ml-2 flex items-center">
-          <span className="text-[11px] text-[#6c7883] opacity-80">{formatTime(message.timestamp)}</span>
+        <p className="text-[14px] leading-relaxed text-white/95 break-words pr-12 sm:pr-14">
+          {message.text}
+        </p>
+        <div className={`absolute bottom-1.5 ${isOwn ? 'right-2.5' : 'right-2.5'} flex items-center gap-0.5`}>
+          <span className="text-[10px] text-white/40 font-medium">{formatTime(message.timestamp)}</span>
           {isOwn && getStatusIcon()}
-        </span>
+        </div>
       </div>
     </div>
   );
