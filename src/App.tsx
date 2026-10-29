@@ -1,13 +1,15 @@
 import { useState, useCallback } from 'react';
+import { ThemeProvider } from './contexts/ThemeContext';
 import LeftSidebar from './components/LeftSidebar';
 import ChatList from './components/ChatList';
 import ChatWindow from './components/ChatWindow';
+import Settings from './components/Settings';
 import { mockChats, Chat, Message } from './data/mockData';
 
 type TabType = 'chats' | 'contacts' | 'calls' | 'saved' | 'settings';
 type FilterType = 'all' | 'personal' | 'groups' | 'channels' | 'bots';
 
-function App() {
+function AppContent() {
   const [chats, setChats] = useState<Chat[]>(mockChats);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -92,7 +94,22 @@ function App() {
     setIsMobileChatOpen(false);
   }, []);
 
-  // Если НЕ "Чаты" — показываем ОДНУ заглушку на всю ширину (средняя + правая колонка)
+  // Если настройки — показываем компонент настроек
+  if (activeTab === 'settings') {
+    return (
+      <div className="app-container">
+        <LeftSidebar
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          onMenuClick={() => console.log('Menu clicked')}
+          onSearchClick={() => console.log('Search clicked')}
+        />
+        <Settings />
+      </div>
+    );
+  }
+
+  // Если НЕ "Чаты" — показываем заглушку
   if (activeTab !== 'chats') {
     return (
       <div className="app-container">
@@ -110,7 +127,6 @@ function App() {
   // Если "Чаты" — показываем список чатов + окно переписки
   return (
     <div className="app-container">
-      {/* Left Sidebar (70px) */}
       <LeftSidebar
         activeTab={activeTab}
         onTabChange={setActiveTab}
@@ -118,7 +134,6 @@ function App() {
         onSearchClick={() => console.log('Search clicked')}
       />
 
-      {/* Chat List (360px) */}
       <div className={`chat-list-wrapper ${isMobileChatOpen ? 'hidden-mobile' : ''}`}>
         <ChatList
           chats={chats}
@@ -131,7 +146,6 @@ function App() {
         />
       </div>
 
-      {/* Chat Window (flex: 1) */}
       <div className={`chat-window-wrapper ${!isMobileChatOpen ? '' : ''}`}>
         {activeChat ? (
           <ChatWindow
@@ -147,7 +161,6 @@ function App() {
   );
 }
 
-// Заглушка для неактивных вкладок — занимает всю ширину (средняя + правая колонка)
 function PlaceholderPanel({ tab }: { tab: TabType }) {
   const tabNames: Record<TabType, string> = {
     chats: 'Чаты',
@@ -169,7 +182,7 @@ function PlaceholderPanel({ tab }: { tab: TabType }) {
     <div style={{ 
       flex: 1,
       height: '100%',
-      background: '#0e1621',
+      background: 'var(--bg-primary)',
       display: 'flex', 
       alignItems: 'center', 
       justifyContent: 'center'
@@ -180,7 +193,7 @@ function PlaceholderPanel({ tab }: { tab: TabType }) {
           height: '120px',
           margin: '0 auto 20px',
           borderRadius: '50%',
-          background: '#17212b',
+          background: 'var(--bg-secondary)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -191,12 +204,12 @@ function PlaceholderPanel({ tab }: { tab: TabType }) {
         <h2 style={{ 
           fontSize: '22px', 
           fontWeight: 500, 
-          color: '#6c7883', 
+          color: 'var(--text-secondary)', 
           marginBottom: '8px' 
         }}>
           {tabNames[tab]}
         </h2>
-        <p style={{ fontSize: '14px', color: '#6c7883' }}>
+        <p style={{ fontSize: '14px', color: 'var(--text-tertiary)' }}>
           Раздел в разработке
         </p>
       </div>
@@ -204,7 +217,6 @@ function PlaceholderPanel({ tab }: { tab: TabType }) {
   );
 }
 
-// Заглушка для пустого окна чата
 function EmptyChatState() {
   return (
     <div style={{ 
@@ -212,7 +224,7 @@ function EmptyChatState() {
       display: 'flex', 
       alignItems: 'center', 
       justifyContent: 'center',
-      background: '#0e1621'
+      background: 'var(--bg-primary)'
     }}>
       <div style={{ textAlign: 'center' }}>
         <div style={{ 
@@ -220,7 +232,7 @@ function EmptyChatState() {
           height: '120px', 
           margin: '0 auto 20px', 
           borderRadius: '50%', 
-          background: '#17212b',
+          background: 'var(--bg-secondary)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -231,16 +243,24 @@ function EmptyChatState() {
         <h2 style={{ 
           fontSize: '22px', 
           fontWeight: 500, 
-          color: '#6c7883', 
+          color: 'var(--text-secondary)', 
           marginBottom: '8px' 
         }}>
-          Telegram Web
+          RUMES
         </h2>
-        <p style={{ fontSize: '14px', color: '#6c7883' }}>
+        <p style={{ fontSize: '14px', color: 'var(--text-tertiary)' }}>
           Выберите чат для начала общения
         </p>
       </div>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   );
 }
 

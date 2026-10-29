@@ -70,7 +70,7 @@ export default function ChatList({
     <div className="chat-list-panel">
       {/* Header */}
       <div className="header">
-        <h1 style={{ fontSize: '17px', fontWeight: 500, color: '#fff', flex: 1 }}>Telegram</h1>
+        <h1 style={{ fontSize: '17px', fontWeight: 500, color: 'var(--text-primary)', flex: 1 }}>RUMES</h1>
         <button className="icon-btn">
           <Edit3 size={20} strokeWidth={1.8} />
         </button>
@@ -94,7 +94,7 @@ export default function ChatList({
               transform: 'translateY(-50%)',
               width: '16px',
               height: '16px',
-              color: '#6c7883'
+              color: 'var(--text-tertiary)'
             }}
             strokeWidth={2}
           />
@@ -159,7 +159,7 @@ export default function ChatList({
             alignItems: 'center', 
             justifyContent: 'center', 
             padding: '60px 20px',
-            color: '#6c7883'
+            color: 'var(--text-tertiary)'
           }}>
             <Search size={48} strokeWidth={1} style={{ marginBottom: '12px', opacity: 0.3 }} />
             <p style={{ fontSize: '14px' }}>Ничего не найдено</p>
