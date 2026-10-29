@@ -17,6 +17,7 @@ function AppContent() {
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileChatOpen, setIsMobileChatOpen] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<TabType>('chats');
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
 
@@ -107,17 +108,38 @@ function AppContent() {
     setIsMobileChatOpen(false);
   }, []);
 
+  const handleToggleMobileSidebar = useCallback(() => {
+    setIsMobileSidebarOpen(prev => !prev);
+  }, []);
+
+  const handleCloseMobileSidebar = useCallback(() => {
+    setIsMobileSidebarOpen(false);
+  }, []);
+
+  const handleTabChange = useCallback((tab: TabType) => {
+    setActiveTab(tab);
+    setIsMobileSidebarOpen(false);
+  }, []);
+
+  const handleBackToChats = useCallback(() => {
+    setActiveTab('chats');
+    setIsMobileChatOpen(false);
+  }, []);
+
   // Настройки
   if (activeTab === 'settings') {
     return (
       <div className="app-container">
         <LeftSidebar
           activeTab={activeTab}
-          onTabChange={setActiveTab}
-          onMenuClick={() => {}}
+          onTabChange={handleTabChange}
+          onMenuClick={handleToggleMobileSidebar}
           onSearchClick={() => {}}
+          isMobileOpen={isMobileSidebarOpen}
+          onClose={handleCloseMobileSidebar}
         />
-        <Settings />
+        <MobileSidebarOverlay isOpen={isMobileSidebarOpen} onClose={handleCloseMobileSidebar} />
+        <Settings onBack={handleBackToChats} />
       </div>
     );
   }
@@ -144,11 +166,15 @@ function AppContent() {
       <div className="app-container">
         <LeftSidebar
           activeTab={activeTab}
-          onTabChange={setActiveTab}
-          onMenuClick={() => {}}
+          onTabChange={handleTabChange}
+          onMenuClick={handleToggleMobileSidebar}
           onSearchClick={() => {}}
+          isMobileOpen={isMobileSidebarOpen}
+          onClose={handleCloseMobileSidebar}
         />
+        <MobileSidebarOverlay isOpen={isMobileSidebarOpen} onClose={handleCloseMobileSidebar} />
         <div className="chat-window-wrapper">
+          <MobileHeader title={getTabTitle(activeTab)} onBack={handleBackToChats} onMenu={handleToggleMobileSidebar} />
           {contentComponent}
         </div>
       </div>
@@ -160,10 +186,13 @@ function AppContent() {
     <div className="app-container">
       <LeftSidebar
         activeTab={activeTab}
-        onTabChange={setActiveTab}
-        onMenuClick={() => {}}
+        onTabChange={handleTabChange}
+        onMenuClick={handleToggleMobileSidebar}
         onSearchClick={() => {}}
+        isMobileOpen={isMobileSidebarOpen}
+        onClose={handleCloseMobileSidebar}
       />
+      <MobileSidebarOverlay isOpen={isMobileSidebarOpen} onClose={handleCloseMobileSidebar} />
 
       <ResizableChatList
         chats={chats}
@@ -190,6 +219,40 @@ function AppContent() {
       </div>
     </div>
   );
+}
+
+function getTabTitle(tab: TabType): string {
+  const titles: Record<TabType, string> = {
+    chats: 'Чаты',
+    contacts: 'Контакты',
+    calls: 'Звонки',
+    saved: 'Сохранённое',
+    settings: 'Настройки',
+  };
+  return titles[tab];
+}
+
+function MobileHeader({ title, onBack, onMenu }: { title: string; onBack: () => void; onMenu: () => void }) {
+  return (
+    <div className="mobile-header">
+      <button className="mobile-header-btn" onClick={onBack}>
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      <h2 className="mobile-header-title">{title}</h2>
+      <button className="mobile-header-btn" onClick={onMenu}>
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+  );
+}
+
+function MobileSidebarOverlay({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  if (!isOpen) return null;
+  return <div className="mobile-sidebar-overlay" onClick={onClose} />;
 }
 
 function PlaceholderPanel({ tab }: { tab: TabType }) {

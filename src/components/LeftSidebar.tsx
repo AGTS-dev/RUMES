@@ -8,9 +8,11 @@ interface LeftSidebarProps {
   onTabChange: (tab: TabType) => void;
   onMenuClick: () => void;
   onSearchClick: () => void;
+  isMobileOpen?: boolean;
+  onClose?: () => void;
 }
 
-export default function LeftSidebar({ activeTab, onTabChange, onMenuClick, onSearchClick }: LeftSidebarProps) {
+export default function LeftSidebar({ activeTab, onTabChange, onMenuClick, onSearchClick, isMobileOpen, onClose }: LeftSidebarProps) {
   const icons = [
     { id: 'menu' as const, icon: Menu, action: onMenuClick },
     { id: 'search' as const, icon: Search, action: onSearchClick },
@@ -22,7 +24,7 @@ export default function LeftSidebar({ activeTab, onTabChange, onMenuClick, onSea
   ];
 
   return (
-    <div className="left-sidebar">
+    <div className={`left-sidebar ${isMobileOpen ? 'mobile-open' : ''}`}>
       {/* Top icons */}
       <div className="flex flex-col items-center flex-1">
         {icons.map((item) => {

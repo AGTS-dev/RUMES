@@ -6,7 +6,11 @@ import FolderManager from './FolderManager';
 
 type SettingsTab = 'general' | 'appearance' | 'folders' | 'wallpapers' | 'about';
 
-export default function Settings() {
+interface SettingsProps {
+  onBack?: () => void;
+}
+
+export default function Settings({ onBack }: SettingsProps) {
   const { theme, setTheme, customAccentColor, setCustomAccentColor, customColors, setCustomColors } = useTheme();
   const [activeTab, setActiveTab] = useState<SettingsTab>('general');
 
@@ -33,6 +37,13 @@ export default function Settings() {
   return (
     <div className="settings-panel">
       <div className="settings-header">
+        {onBack && (
+          <button className="settings-back-btn" onClick={onBack}>
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+        )}
         <h1 className="settings-title">Настройки</h1>
       </div>
 

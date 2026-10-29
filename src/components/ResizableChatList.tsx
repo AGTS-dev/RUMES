@@ -15,6 +15,19 @@ interface ResizableChatListProps {
   isMobileHidden: boolean;
 }
 
+// Snap points: 70px (только аватарки), 360px (по умолчанию), 600px (максимум)
+const SNAP_POINTS = [70, 360, 600];
+const SNAP_THRESHOLD = 30; // pixels around snap point
+
+function getSnappedWidth(width: number): number {
+  for (const snapPoint of SNAP_POINTS) {
+    if (Math.abs(width - snapPoint) < SNAP_THRESHOLD) {
+      return snapPoint;
+    }
+  }
+  return width;
+}
+
 export default function ResizableChatList({
   chats,
   activeChatId,
@@ -41,6 +54,8 @@ export default function ResizableChatList({
 
     const handleMouseUp = () => {
       setIsResizing(false);
+      // Apply snap on mouse up
+      setWidth(prev => getSnappedWidth(prev));
     };
 
     if (isResizing) {
@@ -72,6 +87,7 @@ export default function ResizableChatList({
         onSearchChange={onSearchChange}
         activeFilter={activeFilter}
         onFilterChange={onFilterChange}
+        isCompact={width < 150}
       />
       <div
         className="resize-handle"

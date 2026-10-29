@@ -12,7 +12,8 @@ const wallpapers = [
   { id: 'solid-dark', name: 'Тёмный', preview: '#000000' },
   { id: 'solid-gray', name: 'Серый', preview: '#2a2a2a' },
   { id: 'russia-kokoshnik', name: 'Кокошник', preview: 'linear-gradient(135deg, #c41e3a 0%, #ffd700 100%)' },
-  { id: 'russia-pattern', name: 'Узоры', preview: 'linear-gradient(135deg, #fff8e7 0%, #ffd700 100%)' },
+  { id: 'russia-khokhloma', name: 'Хохлома', preview: 'linear-gradient(135deg, #000000 0%, #c41e3a 50%, #ffd700 100%)' },
+  { id: 'russia-gzhel', name: 'Гжель', preview: 'linear-gradient(135deg, #ffffff 0%, #0039A6 100%)' },
   { id: 'russia-birch', name: 'Берёзовая роща', preview: 'linear-gradient(135deg, #f5f5dc 0%, #228B22 100%)' },
   { id: 'russia-winter', name: 'Русская зима', preview: 'linear-gradient(135deg, #E0FFFF 0%, #B0E0E6 100%)' },
 ];

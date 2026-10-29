@@ -11,6 +11,7 @@ interface ChatListProps {
   onSearchChange: (query: string) => void;
   activeFilter: FilterType;
   onFilterChange: (filter: FilterType) => void;
+  isCompact?: boolean;
 }
 
 export default function ChatList({ 
@@ -20,7 +21,8 @@ export default function ChatList({
   searchQuery, 
   onSearchChange,
   activeFilter,
-  onFilterChange
+  onFilterChange,
+  isCompact = false
 }: ChatListProps) {
   const formatTime = (date: Date) => {
     const now = new Date();
@@ -67,52 +69,58 @@ export default function ChatList({
   });
 
   return (
-    <div className="chat-list-panel">
-      {/* Header */}
-      <div className="header">
-        <h1 className="app-logo">RUMES</h1>
-        <button className="icon-btn">
-          <Edit3 size={20} strokeWidth={1.8} />
-        </button>
-      </div>
-
-      {/* Search */}
-      <div style={{ padding: '8px 12px' }}>
-        <div style={{ position: 'relative' }}>
-          <input
-            type="text"
-            placeholder="Поиск"
-            value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
-            className="search-input"
-          />
-          <Search
-            style={{
-              position: 'absolute',
-              left: '12px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              width: '16px',
-              height: '16px',
-              color: 'var(--text-tertiary)'
-            }}
-            strokeWidth={2}
-          />
-        </div>
-      </div>
-
-      {/* Tabs */}
-      <div className="tabs">
-        {filters.map((filter) => (
-          <button
-            key={filter.id}
-            onClick={() => onFilterChange(filter.id)}
-            className={`tab ${activeFilter === filter.id ? 'active' : ''}`}
-          >
-            {filter.label}
+    <div className={`chat-list-panel ${isCompact ? 'compact' : ''}`}>
+      {/* Header - hidden in compact mode */}
+      {!isCompact && (
+        <div className="header">
+          <h1 className="app-logo">RUMES</h1>
+          <button className="icon-btn">
+            <Edit3 size={20} strokeWidth={1.8} />
           </button>
-        ))}
-      </div>
+        </div>
+      )}
+
+      {/* Search - hidden in compact mode */}
+      {!isCompact && (
+        <div style={{ padding: '8px 12px' }}>
+          <div style={{ position: 'relative' }}>
+            <input
+              type="text"
+              placeholder="Поиск"
+              value={searchQuery}
+              onChange={(e) => onSearchChange(e.target.value)}
+              className="search-input"
+            />
+            <Search
+              style={{
+                position: 'absolute',
+                left: '12px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                width: '16px',
+                height: '16px',
+                color: 'var(--text-tertiary)'
+              }}
+              strokeWidth={2}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Tabs - hidden in compact mode */}
+      {!isCompact && (
+        <div className="tabs">
+          {filters.map((filter) => (
+            <button
+              key={filter.id}
+              onClick={() => onFilterChange(filter.id)}
+              className={`tab ${activeFilter === filter.id ? 'active' : ''}`}
+            >
+              {filter.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Chat List */}
       <div style={{ flex: 1, overflowY: 'auto' }}>
@@ -120,7 +128,7 @@ export default function ChatList({
           <div
             key={chat.id}
             onClick={() => onSelectChat(chat.id)}
-            className={`chat-item ${activeChatId === chat.id ? 'active' : ''}`}
+            className={`chat-item ${activeChatId === chat.id ? 'active' : ''} ${isCompact ? 'compact' : ''}`}
           >
             {/* Avatar */}
             <div 
@@ -130,25 +138,29 @@ export default function ChatList({
               {chat.avatar}
             </div>
 
-            {/* Chat Info */}
-            <div className="chat-info">
-              <div className="chat-name">{chat.name}</div>
-              <div className={`chat-preview ${chat.isTyping ? 'typing' : ''}`}>
-                {chat.isTyping ? 'печатает...' : chat.lastMessage}
-              </div>
-            </div>
-
-            {/* Meta */}
-            <div className="chat-meta">
-              <div className={`chat-time ${chat.unreadCount > 0 ? 'unread' : ''}`}>
-                {formatTime(chat.lastMessageTime)}
-              </div>
-              {chat.unreadCount > 0 && (
-                <div className="unread-badge">
-                  {chat.unreadCount}
+            {/* Chat Info - hidden in compact mode */}
+            {!isCompact && (
+              <div className="chat-info">
+                <div className="chat-name">{chat.name}</div>
+                <div className={`chat-preview ${chat.isTyping ? 'typing' : ''}`}>
+                  {chat.isTyping ? 'печатает...' : chat.lastMessage}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
+
+            {/* Meta - hidden in compact mode */}
+            {!isCompact && (
+              <div className="chat-meta">
+                <div className={`chat-time ${chat.unreadCount > 0 ? 'unread' : ''}`}>
+                  {formatTime(chat.lastMessageTime)}
+                </div>
+                {chat.unreadCount > 0 && (
+                  <div className="unread-badge">
+                    {chat.unreadCount}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         ))}
 
