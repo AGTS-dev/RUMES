@@ -51,9 +51,11 @@ export default function ChatWindow({ chat, onSendMessage, onBack }: ChatWindowPr
 
   return (
     <div className="flex flex-col h-full relative overflow-hidden">
-      {/* Background orbs for chat */}
-      <div className="bg-orb w-96 h-96 bg-violet-600 -top-40 -right-40 opacity-10" />
-      <div className="bg-orb w-72 h-72 bg-cyan-500 -bottom-20 -left-20 opacity-10" />
+      {/* Background */}
+      <div className="absolute inset-0 bg-[#0b0d14]">
+        <div className="bg-orb w-[500px] h-[500px] bg-indigo-600 opacity-[0.04] -top-40 -right-40" />
+        <div className="bg-orb w-[400px] h-[400px] bg-violet-500 opacity-[0.03] -bottom-20 -left-20" />
+      </div>
 
       <ChatHeader chat={chat} onBack={onBack} />
 
@@ -63,13 +65,13 @@ export default function ChatWindow({ chat, onSendMessage, onBack }: ChatWindowPr
           <div key={group.date}>
             {/* Date separator */}
             <div className="flex justify-center my-4">
-              <span className="glass-light text-gray-400 text-[11px] font-medium px-4 py-1.5 rounded-full backdrop-blur-md">
+              <span className="glass-surface text-gray-400 text-[11px] font-medium px-4 py-1.5 rounded-full">
                 {group.date}
               </span>
             </div>
 
             {/* Messages */}
-            {group.messages.map(({ message, index }, groupMsgIndex) => (
+            {group.messages.map(({ message, index }) => (
               <MessageBubble
                 key={message.id}
                 message={message}
@@ -83,12 +85,12 @@ export default function ChatWindow({ chat, onSendMessage, onBack }: ChatWindowPr
 
         {/* Typing indicator */}
         {chat.isTyping && (
-          <div className="flex justify-start mt-3 animate-fade-in-up">
-            <div className="glass-light px-4 py-3 rounded-2xl rounded-tl-md shadow-lg shadow-black/5">
+          <div className="flex justify-start mt-3 anim-fade-up">
+            <div className="msg-other px-4 py-3 rounded-2xl rounded-bl-sm">
               <div className="flex gap-1.5 items-center">
-                <span className="w-2 h-2 bg-violet-400 rounded-full typing-dot-1" />
-                <span className="w-2 h-2 bg-violet-400 rounded-full typing-dot-2" />
-                <span className="w-2 h-2 bg-violet-400 rounded-full typing-dot-3" />
+                <span className="w-2 h-2 bg-indigo-400 rounded-full typing-dot-1" />
+                <span className="w-2 h-2 bg-indigo-400 rounded-full typing-dot-2" />
+                <span className="w-2 h-2 bg-indigo-400 rounded-full typing-dot-3" />
               </div>
             </div>
           </div>
