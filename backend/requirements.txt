@@ -1,0 +1,12 @@
+fastapi>=0.116
+uvicorn[standard]>=0.35
+sqlalchemy>=2.0
+aiosqlite>=0.20
+pydantic>=2.7
+pydantic-settings>=2.2
+pydantic[email]
+PyJWT>=2.8
+passlib>=1.7
+bcrypt>=4.0
+python-multipart>=0.0.9
+websockets>=12.0
