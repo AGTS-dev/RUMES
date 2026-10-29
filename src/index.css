@@ -480,7 +480,7 @@ body {
 .sidebar-icon {
   width: 48px;
   height: 48px;
-  border-radius: 12px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -488,10 +488,12 @@ body {
   cursor: pointer;
   transition: all 150ms;
   margin: 2px 0;
+  background: transparent;
+  border: none;
 }
 
 .sidebar-icon:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: #202b36;
   color: #fff;
 }
 
@@ -537,10 +539,13 @@ body {
   flex: 1;
   display: flex;
   min-width: 0;
+  background: #0e1621;
 }
 
 .chat-window-wrapper .chat-window-panel {
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Mobile responsive */

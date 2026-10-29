@@ -45,12 +45,14 @@ function App() {
         : chat
     ));
 
+    // Simulate typing
     setTimeout(() => {
       setChats(prev => prev.map(chat =>
         chat.id === chatId ? { ...chat, isTyping: true } : chat
       ));
     }, 500);
 
+    // Simulate reply
     setTimeout(() => {
       const replies = [
         'Интересно! Расскажи подробнее 👀',
@@ -92,67 +94,151 @@ function App() {
     setIsMobileChatOpen(false);
   }, []);
 
+  // Render middle panel content based on active tab
+  const renderMiddlePanel = () => {
+    if (activeTab !== 'chats') {
+      return <PlaceholderPanel tab={activeTab} />;
+    }
+    return (
+      <ChatList
+        chats={chats}
+        activeChatId={activeChatId}
+        onSelectChat={handleSelectChat}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        activeFilter={activeFilter}
+        onFilterChange={setActiveFilter}
+      />
+    );
+  };
+
+  // Render right panel content
+  const renderRightPanel = () => {
+    if (activeTab !== 'chats') {
+      return <PlaceholderPanel tab={activeTab} />;
+    }
+    if (activeChat) {
+      return (
+        <ChatWindow
+          chat={activeChat}
+          onSendMessage={handleSendMessage}
+          onBack={handleBack}
+        />
+      );
+    }
+    return <EmptyChatState />;
+  };
+
   return (
     <div className="app-container">
-      {/* Left Sidebar (70px) - hidden on mobile */}
+      {/* Left Sidebar (70px) */}
       <LeftSidebar
         activeTab={activeTab}
         onTabChange={setActiveTab}
-        onMenuClick={() => {}}
-        onSearchClick={() => {}}
+        onMenuClick={() => console.log('Menu clicked')}
+        onSearchClick={() => console.log('Search clicked')}
       />
 
-      {/* Chat List - hidden on mobile when chat is open */}
-      <div 
-        className={`chat-list-wrapper ${isMobileChatOpen ? 'hidden-mobile' : ''}`}
-      >
-        <ChatList
-          chats={chats}
-          activeChatId={activeChatId}
-          onSelectChat={handleSelectChat}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          activeFilter={activeFilter}
-          onFilterChange={setActiveFilter}
-        />
+      {/* Chat List */}
+      <div className={`chat-list-wrapper ${isMobileChatOpen ? 'hidden-mobile' : ''}`}>
+        {renderMiddlePanel()}
       </div>
 
-      {/* Chat Window - hidden on mobile when no chat selected */}
-      <div 
-        className={`chat-window-wrapper ${!isMobileChatOpen && !activeChat ? 'hidden-mobile' : ''} ${!isMobileChatOpen && activeChat ? '' : ''}`}
-      >
-        {activeChat ? (
-          <ChatWindow
-            chat={activeChat}
-            onSendMessage={handleSendMessage}
-            onBack={handleBack}
-          />
-        ) : (
-          <div className="chat-window-panel" style={{ alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ 
-                width: '80px', 
-                height: '80px', 
-                margin: '0 auto 16px', 
-                borderRadius: '50%', 
-                background: '#17212b',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <svg width="40" height="40" fill="none" stroke="#6c7883" viewBox="0 0 24 24" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-              </div>
-              <h2 style={{ fontSize: '20px', fontWeight: 500, color: '#6c7883', marginBottom: '8px' }}>
-                Telegram Web
-              </h2>
-              <p style={{ fontSize: '14px', color: '#6c7883' }}>
-                Выберите чат для начала общения
-              </p>
-            </div>
-          </div>
-        )}
+      {/* Chat Window */}
+      <div className={`chat-window-wrapper ${!activeChat && activeTab === 'chats' && !isMobileChatOpen ? '' : ''} ${activeTab !== 'chats' ? '' : ''}`}>
+        {renderRightPanel()}
+      </div>
+    </div>
+  );
+}
+
+// Placeholder for non-chats tabs
+function PlaceholderPanel({ tab }: { tab: TabType }) {
+  const tabNames: Record<TabType, string> = {
+    chats: 'Чаты',
+    contacts: 'Контакты',
+    calls: 'Звонки',
+    saved: 'Сохранённое',
+    settings: 'Настройки',
+  };
+
+  const tabIcons: Record<TabType, string> = {
+    chats: '💬',
+    contacts: '👥',
+    calls: '📞',
+    saved: '⭐',
+    settings: '⚙️',
+  };
+
+  return (
+    <div style={{ 
+      width: '360px',
+      height: '100%',
+      background: '#17212b',
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center',
+      borderRight: '1px solid #202b36'
+    }}>
+      <div style={{ textAlign: 'center', padding: '20px' }}>
+        <div style={{ 
+          fontSize: '64px', 
+          marginBottom: '16px',
+          opacity: 0.5
+        }}>
+          {tabIcons[tab]}
+        </div>
+        <h2 style={{ 
+          fontSize: '20px', 
+          fontWeight: 500, 
+          color: '#6c7883', 
+          marginBottom: '8px' 
+        }}>
+          {tabNames[tab]}
+        </h2>
+        <p style={{ fontSize: '14px', color: '#6c7883' }}>
+          Раздел в разработке
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// Empty state for chat window
+function EmptyChatState() {
+  return (
+    <div style={{ 
+      flex: 1, 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center',
+      background: '#0e1621'
+    }}>
+      <div style={{ textAlign: 'center' }}>
+        <div style={{ 
+          width: '120px', 
+          height: '120px', 
+          margin: '0 auto 20px', 
+          borderRadius: '50%', 
+          background: '#17212b',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '48px'
+        }}>
+          💬
+        </div>
+        <h2 style={{ 
+          fontSize: '22px', 
+          fontWeight: 500, 
+          color: '#6c7883', 
+          marginBottom: '8px' 
+        }}>
+          Telegram Web
+        </h2>
+        <p style={{ fontSize: '14px', color: '#6c7883' }}>
+          Выберите чат для начала общения
+        </p>
       </div>
     </div>
   );

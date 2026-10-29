@@ -30,10 +30,20 @@ export default function MessageInput({ onSendMessage }: MessageInputProps) {
     }
   };
 
+  const handleEmoji = () => {
+    alert('Эмодзи — функция в разработке');
+    console.log('Emoji clicked');
+  };
+
+  const handleAttach = () => {
+    alert('Прикрепить файл — функция в разработке');
+    console.log('Attach clicked');
+  };
+
   return (
     <div className="input-area">
       {/* Emoji button */}
-      <button className="icon-btn">
+      <button className="icon-btn" onClick={handleEmoji} title="Эмодзи">
         <Smile size={22} strokeWidth={1.8} />
       </button>
 
@@ -51,7 +61,7 @@ export default function MessageInput({ onSendMessage }: MessageInputProps) {
       </div>
 
       {/* Attach button */}
-      <button className="icon-btn">
+      <button className="icon-btn" onClick={handleAttach} title="Прикрепить файл">
         <Paperclip size={22} strokeWidth={1.8} />
       </button>
 
