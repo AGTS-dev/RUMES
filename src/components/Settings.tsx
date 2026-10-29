@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { useTheme, ThemeType } from '../contexts/ThemeContext';
 import WallpaperPicker from './WallpaperPicker';
 
-type SettingsTab = 'general' | 'appearance' | 'wallpapers' | 'about';
+import FolderManager from './FolderManager';
+
+type SettingsTab = 'general' | 'appearance' | 'folders' | 'wallpapers' | 'about';
 
 export default function Settings() {
   const { theme, setTheme, customAccentColor, setCustomAccentColor, customColors, setCustomColors } = useTheme();
@@ -23,6 +25,7 @@ export default function Settings() {
   const tabs = [
     { id: 'general' as SettingsTab, label: 'Общие', icon: '⚙️' },
     { id: 'appearance' as SettingsTab, label: 'Оформление', icon: '🎨' },
+    { id: 'folders' as SettingsTab, label: 'Папки', icon: '📁' },
     { id: 'wallpapers' as SettingsTab, label: 'Обои', icon: '🖼️' },
     { id: 'about' as SettingsTab, label: 'О приложении', icon: 'ℹ️' },
   ];
@@ -184,6 +187,15 @@ export default function Settings() {
               </div>
             )}
           </>
+        )}
+
+        {/* Папки */}
+        {activeTab === 'folders' && (
+          <div className="settings-section">
+            <h2 className="settings-section-title">Папки чатов</h2>
+            <p className="settings-description">Создавайте папки для организации чатов. Вы можете добавлять свои папки с иконками и цветами.</p>
+            <FolderManager />
+          </div>
         )}
 
         {/* Обои */}

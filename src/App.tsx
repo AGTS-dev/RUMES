@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { ThemeProvider } from './contexts/ThemeContext';
 import LeftSidebar from './components/LeftSidebar';
-import ChatList from './components/ChatList';
+import ResizableChatList from './components/ResizableChatList';
 import ChatWindow from './components/ChatWindow';
 import Contacts from './components/Contacts';
 import Calls from './components/Calls';
@@ -165,17 +165,16 @@ function AppContent() {
         onSearchClick={() => {}}
       />
 
-      <div className={`chat-list-wrapper ${isMobileChatOpen ? 'hidden-mobile' : ''}`}>
-        <ChatList
-          chats={chats}
-          activeChatId={activeChatId}
-          onSelectChat={handleSelectChat}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          activeFilter={activeFilter}
-          onFilterChange={setActiveFilter}
-        />
-      </div>
+      <ResizableChatList
+        chats={chats}
+        activeChatId={activeChatId}
+        onSelectChat={handleSelectChat}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        activeFilter={activeFilter}
+        onFilterChange={setActiveFilter}
+        isMobileHidden={isMobileChatOpen}
+      />
 
       <div className="chat-window-wrapper">
         {activeChat ? (
