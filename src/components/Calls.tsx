@@ -1,10 +1,24 @@
 import { useState } from 'react';
 import { mockCalls } from '../data/extendedMockData';
+import CallModal from './CallModal';
 
 type CallFilter = 'all' | 'missed' | 'incoming' | 'outgoing';
 
 export default function Calls() {
   const [filter, setFilter] = useState<CallFilter>('all');
+  const [callModal, setCallModal] = useState<{
+    open: boolean;
+    type: 'audio' | 'video';
+    contactName: string;
+    contactAvatar: string;
+    contactAvatarColor: string;
+  }>({
+    open: false,
+    type: 'audio',
+    contactName: '',
+    contactAvatar: '',
+    contactAvatarColor: '',
+  });
 
   const filteredCalls = mockCalls.filter(call => {
     if (filter === 'all') return true;
@@ -119,7 +133,17 @@ export default function Calls() {
             </div>
             <div className="call-meta">
               <div className="call-time">{formatCallTime(call.timestamp)}</div>
-              <button className="icon-btn" title="Позвонить снова">
+              <button 
+                className="icon-btn" 
+                title="Позвонить снова"
+                onClick={() => setCallModal({
+                  open: true,
+                  type: call.callType,
+                  contactName: call.contactName,
+                  contactAvatar: call.avatar,
+                  contactAvatarColor: call.avatarColor,
+                })}
+              >
                 <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
@@ -134,6 +158,15 @@ export default function Calls() {
           </div>
         )}
       </div>
+
+      <CallModal
+        isOpen={callModal.open}
+        onClose={() => setCallModal({ ...callModal, open: false })}
+        contactName={callModal.contactName}
+        contactAvatar={callModal.contactAvatar}
+        contactAvatarColor={callModal.contactAvatarColor}
+        callType={callModal.type}
+      />
     </div>
   );
 }

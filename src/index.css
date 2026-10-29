@@ -1621,8 +1621,8 @@ body {
   --unread: #c41e3a;
 }
 
-/* Russian pattern background */
-[data-theme="russia"] .messages-container {
+/* Russian pattern background - только если не выбран кастомный wallpaper */
+[data-theme="russia"] .messages-container:not([data-wallpaper]) {
   background-color: #fff8e7 !important;
   background-image: 
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='none' stroke='%23c41e3a' stroke-width='1' opacity='0.1'%3E%3Cpath d='M30 5 L35 15 L45 15 L37 22 L40 32 L30 26 L20 32 L23 22 L15 15 L25 15 Z'/%3E%3Ccircle cx='30' cy='45' r='8'/%3E%3Cpath d='M22 45 Q30 38 38 45 Q30 52 22 45'/%3E%3C/g%3E%3C/svg%3E") !important;
