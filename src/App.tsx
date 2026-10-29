@@ -3,6 +3,9 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import LeftSidebar from './components/LeftSidebar';
 import ChatList from './components/ChatList';
 import ChatWindow from './components/ChatWindow';
+import Contacts from './components/Contacts';
+import Calls from './components/Calls';
+import SavedMessages from './components/SavedMessages';
 import Settings from './components/Settings';
 import { mockChats, Chat, Message } from './data/mockData';
 
@@ -109,8 +112,24 @@ function AppContent() {
     );
   }
 
-  // Если НЕ "Чаты" — показываем заглушку
+  // Если НЕ "Чаты" — показываем соответствующий компонент
   if (activeTab !== 'chats') {
+    let contentComponent;
+    
+    switch (activeTab) {
+      case 'contacts':
+        contentComponent = <Contacts />;
+        break;
+      case 'calls':
+        contentComponent = <Calls />;
+        break;
+      case 'saved':
+        contentComponent = <SavedMessages />;
+        break;
+      default:
+        contentComponent = <PlaceholderPanel tab={activeTab} />;
+    }
+    
     return (
       <div className="app-container">
         <LeftSidebar
@@ -119,7 +138,9 @@ function AppContent() {
           onMenuClick={() => console.log('Menu clicked')}
           onSearchClick={() => console.log('Search clicked')}
         />
-        <PlaceholderPanel tab={activeTab} />
+        <div className="chat-window-wrapper">
+          {contentComponent}
+        </div>
       </div>
     );
   }

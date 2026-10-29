@@ -885,6 +885,238 @@ body {
   flex-direction: column;
 }
 
+/* Contacts Panel */
+.contacts-panel,
+.calls-panel,
+.saved-panel {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-primary);
+}
+
+.contacts-header,
+.calls-header,
+.saved-header {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.contacts-title,
+.calls-title,
+.saved-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.contacts-search,
+.saved-search {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.contacts-list,
+.calls-list,
+.saved-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.contact-item,
+.call-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background 150ms;
+}
+
+.contact-item:hover,
+.call-item:hover {
+  background: var(--bg-hover);
+}
+
+.contact-info,
+.call-info {
+  flex: 1;
+  margin-left: 12px;
+  min-width: 0;
+}
+
+.contact-name,
+.call-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.contact-status {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.contact-actions {
+  display: flex;
+  gap: 4px;
+}
+
+/* Calls specific */
+.calls-filters {
+  display: flex;
+  gap: 8px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.filter-btn {
+  padding: 6px 16px;
+  border-radius: 16px;
+  border: none;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 150ms;
+}
+
+.filter-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.filter-btn.active {
+  background: var(--accent);
+  color: var(--bg-primary);
+}
+
+.call-item.missed .call-name {
+  color: #ff4444;
+}
+
+.call-details {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.call-type {
+  font-size: 13px;
+}
+
+.call-duration {
+  font-size: 13px;
+  color: var(--text-tertiary);
+}
+
+.call-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.call-time {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+/* Saved Messages specific */
+.saved-item {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+  transition: background 150ms;
+}
+
+.saved-item:hover {
+  background: var(--bg-hover);
+}
+
+.saved-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.saved-from {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.avatar-small {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 500;
+  color: white;
+}
+
+.saved-from-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.saved-time {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.saved-content {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.saved-type-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+}
+
+.saved-text {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.saved-actions {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--text-tertiary);
+  font-size: 14px;
+}
+
 /* Mobile responsive */
 @media (max-width: 900px) {
   .left-sidebar {
