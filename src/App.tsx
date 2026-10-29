@@ -45,14 +45,12 @@ function App() {
         : chat
     ));
 
-    // Simulate typing
     setTimeout(() => {
       setChats(prev => prev.map(chat =>
         chat.id === chatId ? { ...chat, isTyping: true } : chat
       ));
     }, 500);
 
-    // Simulate reply
     setTimeout(() => {
       const replies = [
         'Интересно! Расскажи подробнее 👀',
@@ -94,41 +92,22 @@ function App() {
     setIsMobileChatOpen(false);
   }, []);
 
-  // Render middle panel content based on active tab
-  const renderMiddlePanel = () => {
-    if (activeTab !== 'chats') {
-      return <PlaceholderPanel tab={activeTab} />;
-    }
+  // Если НЕ "Чаты" — показываем ОДНУ заглушку на всю ширину (средняя + правая колонка)
+  if (activeTab !== 'chats') {
     return (
-      <ChatList
-        chats={chats}
-        activeChatId={activeChatId}
-        onSelectChat={handleSelectChat}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        activeFilter={activeFilter}
-        onFilterChange={setActiveFilter}
-      />
-    );
-  };
-
-  // Render right panel content
-  const renderRightPanel = () => {
-    if (activeTab !== 'chats') {
-      return <PlaceholderPanel tab={activeTab} />;
-    }
-    if (activeChat) {
-      return (
-        <ChatWindow
-          chat={activeChat}
-          onSendMessage={handleSendMessage}
-          onBack={handleBack}
+      <div className="app-container">
+        <LeftSidebar
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          onMenuClick={() => console.log('Menu clicked')}
+          onSearchClick={() => console.log('Search clicked')}
         />
-      );
-    }
-    return <EmptyChatState />;
-  };
+        <PlaceholderPanel tab={activeTab} />
+      </div>
+    );
+  }
 
+  // Если "Чаты" — показываем список чатов + окно переписки
   return (
     <div className="app-container">
       {/* Left Sidebar (70px) */}
@@ -139,20 +118,36 @@ function App() {
         onSearchClick={() => console.log('Search clicked')}
       />
 
-      {/* Chat List */}
+      {/* Chat List (360px) */}
       <div className={`chat-list-wrapper ${isMobileChatOpen ? 'hidden-mobile' : ''}`}>
-        {renderMiddlePanel()}
+        <ChatList
+          chats={chats}
+          activeChatId={activeChatId}
+          onSelectChat={handleSelectChat}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          activeFilter={activeFilter}
+          onFilterChange={setActiveFilter}
+        />
       </div>
 
-      {/* Chat Window */}
-      <div className={`chat-window-wrapper ${!activeChat && activeTab === 'chats' && !isMobileChatOpen ? '' : ''} ${activeTab !== 'chats' ? '' : ''}`}>
-        {renderRightPanel()}
+      {/* Chat Window (flex: 1) */}
+      <div className={`chat-window-wrapper ${!isMobileChatOpen ? '' : ''}`}>
+        {activeChat ? (
+          <ChatWindow
+            chat={activeChat}
+            onSendMessage={handleSendMessage}
+            onBack={handleBack}
+          />
+        ) : (
+          <EmptyChatState />
+        )}
       </div>
     </div>
   );
 }
 
-// Placeholder for non-chats tabs
+// Заглушка для неактивных вкладок — занимает всю ширину (средняя + правая колонка)
 function PlaceholderPanel({ tab }: { tab: TabType }) {
   const tabNames: Record<TabType, string> = {
     chats: 'Чаты',
@@ -172,24 +167,29 @@ function PlaceholderPanel({ tab }: { tab: TabType }) {
 
   return (
     <div style={{ 
-      width: '360px',
+      flex: 1,
       height: '100%',
-      background: '#17212b',
+      background: '#0e1621',
       display: 'flex', 
       alignItems: 'center', 
-      justifyContent: 'center',
-      borderRight: '1px solid #202b36'
+      justifyContent: 'center'
     }}>
       <div style={{ textAlign: 'center', padding: '20px' }}>
         <div style={{ 
-          fontSize: '64px', 
-          marginBottom: '16px',
-          opacity: 0.5
+          width: '120px',
+          height: '120px',
+          margin: '0 auto 20px',
+          borderRadius: '50%',
+          background: '#17212b',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '56px'
         }}>
           {tabIcons[tab]}
         </div>
         <h2 style={{ 
-          fontSize: '20px', 
+          fontSize: '22px', 
           fontWeight: 500, 
           color: '#6c7883', 
           marginBottom: '8px' 
@@ -204,7 +204,7 @@ function PlaceholderPanel({ tab }: { tab: TabType }) {
   );
 }
 
-// Empty state for chat window
+// Заглушка для пустого окна чата
 function EmptyChatState() {
   return (
     <div style={{ 
