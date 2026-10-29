@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-export type ThemeType = 'dark' | 'light' | 'custom' | 'windows98';
+export type ThemeType = 'dark' | 'light' | 'custom' | 'windows98' | 'russia';
 
 export interface CustomColors {
   primary: string;
@@ -52,7 +52,7 @@ function clearAllOverrides() {
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<ThemeType>(() => {
     const saved = localStorage.getItem('rumes-theme');
-    if (saved === 'rainbow') return 'custom'; // миграция
+    if (saved === 'rainbow') return 'custom';
     return (saved as ThemeType) || 'dark';
   });
 
@@ -84,9 +84,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       document.documentElement.style.setProperty('--text-primary', custom.textPrimary);
       document.documentElement.style.setProperty('--text-secondary', custom.textSecondary);
     }
-    // windows98 использует только CSS, без overrides
     
-    // Обои
     document.documentElement.setAttribute('data-wallpaper', wp);
   };
 

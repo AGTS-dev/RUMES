@@ -11,6 +11,10 @@ const wallpapers = [
   { id: 'pattern-grid', name: 'Сетка', preview: 'linear-gradient(#ffffff11 1px, transparent 1px), linear-gradient(90deg, #ffffff11 1px, transparent 1px)' },
   { id: 'solid-dark', name: 'Тёмный', preview: '#000000' },
   { id: 'solid-gray', name: 'Серый', preview: '#2a2a2a' },
+  { id: 'russia-flag', name: 'Флаг России', preview: 'linear-gradient(to bottom, #ffffff 33.33%, #0039A6 33.33%, #0039A6 66.66%, #D52B1E 66.66%)' },
+  { id: 'russia-kremlin', name: 'Кремль', preview: 'linear-gradient(135deg, #D52B1E 0%, #0039A6 50%, #ffffff 100%)' },
+  { id: 'russia-birch', name: 'Берёзы', preview: 'linear-gradient(135deg, #f5f5dc 0%, #228B22 100%)' },
+  { id: 'russia-winter', name: 'Зима', preview: 'linear-gradient(135deg, #E0FFFF 0%, #B0E0E6 100%)' },
 ];
 
 export default function WallpaperPicker() {

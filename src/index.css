@@ -1195,6 +1195,23 @@ body {
   background: #2a2a2a !important;
 }
 
+/* Russia themed wallpapers */
+.messages-container[data-wallpaper="russia-flag"] {
+  background: linear-gradient(to bottom, #ffffff 33.33%, #0039A6 33.33%, #0039A6 66.66%, #D52B1E 66.66%) !important;
+}
+
+.messages-container[data-wallpaper="russia-kremlin"] {
+  background: linear-gradient(135deg, #D52B1E 0%, #0039A6 50%, #ffffff 100%) !important;
+}
+
+.messages-container[data-wallpaper="russia-birch"] {
+  background: linear-gradient(135deg, #f5f5dc 0%, #228B22 100%) !important;
+}
+
+.messages-container[data-wallpaper="russia-winter"] {
+  background: linear-gradient(135deg, #E0FFFF 0%, #B0E0E6 100%) !important;
+}
+
 /* Wallpaper Picker */
 .wallpaper-grid {
   display: grid;
@@ -1535,6 +1552,144 @@ body {
   font-size: 12px;
   color: var(--text-tertiary);
   flex-shrink: 0;
+}
+
+/* ===== RUSSIA THEME ===== */
+[data-theme="russia"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f0f4f8;
+  --bg-tertiary: #e1e8ed;
+  --bg-hover: #d4dde5;
+  --bg-active: #0039A6;
+  --bg-input: #ffffff;
+  --bg-message-in: #f0f4f8;
+  --bg-message-out: #0039A6;
+  
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a5568;
+  --text-tertiary: #718096;
+  --text-accent: #0039A6;
+  
+  --border-color: #cbd5e0;
+  --border-light: #e2e8f0;
+  
+  --accent: #D52B1E;
+  --accent-hover: #b71c1c;
+  
+  --online: #0039A6;
+  --unread: #D52B1E;
+}
+
+[data-theme="russia"] .chat-item.active {
+  background: linear-gradient(135deg, #0039A6 0%, #D52B1E 100%) !important;
+}
+
+[data-theme="russia"] .message-bubble.outgoing {
+  background: linear-gradient(135deg, #0039A6 0%, #0050d4 100%) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="russia"] .sidebar-icon.active {
+  background: linear-gradient(135deg, #0039A6 0%, #D52B1E 100%) !important;
+}
+
+[data-theme="russia"] .tab.active {
+  background: linear-gradient(135deg, #0039A6 0%, #D52B1E 100%) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="russia"] .unread-badge {
+  background: linear-gradient(135deg, #D52B1E 0%, #ff4444 100%) !important;
+}
+
+[data-theme="russia"] .app-logo {
+  background: linear-gradient(135deg, #ffffff 0%, #0039A6 50%, #D52B1E 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme="russia"] .theme-card.active {
+  border-color: #0039A6 !important;
+  box-shadow: 0 0 0 2px #D52B1E !important;
+}
+
+/* ===== SETTINGS TABS ===== */
+.settings-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.settings-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.settings-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: none;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 150ms;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.settings-tab:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.settings-tab.active {
+  background: var(--accent);
+  color: var(--bg-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.settings-tab-icon {
+  font-size: 16px;
+}
+
+.settings-tab-label {
+  font-size: 14px;
+}
+
+.settings-note {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-style: italic;
+}
+
+.about-description {
+  margin-top: 16px;
+  padding: 16px;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.about-description p {
+  margin-bottom: 8px;
+}
+
+.about-description p:last-child {
+  margin-bottom: 0;
 }
 
 /* ===== WINDOWS 98 THEME ===== */
