@@ -1,17 +1,24 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Chat, currentUser } from '../data/mockData';
 import ChatHeader from './ChatHeader';
 import MessageBubble from './MessageBubble';
 import MessageInput from './MessageInput';
+import CallModal from './CallModal';
+import ChatSearch from './ChatSearch';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface ChatWindowProps {
   chat: Chat;
   onSendMessage: (chatId: string, text: string) => void;
   onBack: () => void;
+  onClearHistory: (chatId: string) => void;
 }
 
-export default function ChatWindow({ chat, onSendMessage, onBack }: ChatWindowProps) {
+export default function ChatWindow({ chat, onSendMessage, onBack, onClearHistory }: ChatWindowProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [callModal, setCallModal] = useState<{ open: boolean; type: 'audio' | 'video' }>({ open: false, type: 'audio' });
+  const [searchOpen, setSearchOpen] = useState(false);
+  const { wallpaper } = useTheme();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -20,6 +27,11 @@ export default function ChatWindow({ chat, onSendMessage, onBack }: ChatWindowPr
   useEffect(() => {
     scrollToBottom();
   }, [chat.messages]);
+
+  const shouldShowTail = (index: number) => {
+    if (index === 0) return true;
+    return chat.messages[index].senderId !== chat.messages[index - 1].senderId;
+  };
 
   const groupMessagesByDate = () => {
     const groups: { date: string; messages: typeof chat.messages }[] = [];
@@ -46,18 +58,24 @@ export default function ChatWindow({ chat, onSendMessage, onBack }: ChatWindowPr
 
   return (
     <div className="chat-window-panel">
-      <ChatHeader chat={chat} onBack={onBack} />
+      <ChatHeader
+        chat={chat}
+        onBack={onBack}
+        onCall={(type) => setCallModal({ open: true, type })}
+        onSearch={() => setSearchOpen(true)}
+        onClearHistory={() => onClearHistory(chat.id)}
+      />
 
-      {/* Messages area */}
-      <div className="messages-container">
+      <div 
+        className="messages-container"
+        data-wallpaper={wallpaper}
+      >
         {messageGroups.map((group) => (
           <div key={group.date}>
-            {/* Date separator */}
             <div className="date-separator">
               <span className="date-separator-text">{group.date}</span>
             </div>
 
-            {/* Messages */}
             {group.messages.map((message) => (
               <MessageBubble
                 key={message.id}
@@ -69,7 +87,6 @@ export default function ChatWindow({ chat, onSendMessage, onBack }: ChatWindowPr
           </div>
         ))}
 
-        {/* Typing indicator */}
         {chat.isTyping && (
           <div className="message-row other">
             <div className="message-bubble incoming">
@@ -86,6 +103,25 @@ export default function ChatWindow({ chat, onSendMessage, onBack }: ChatWindowPr
       </div>
 
       <MessageInput onSendMessage={(text) => onSendMessage(chat.id, text)} />
+
+      <CallModal
+        isOpen={callModal.open}
+        onClose={() => setCallModal({ open: false, type: callModal.type })}
+        contactName={chat.name}
+        contactAvatar={chat.avatar}
+        contactAvatarColor={chat.avatarColor}
+        callType={callModal.type}
+      />
+
+      <ChatSearch
+        isOpen={searchOpen}
+        onClose={() => setSearchOpen(false)}
+        messages={chat.messages}
+        onNavigateToMessage={(id) => {
+          const el = document.getElementById(`msg-${id}`);
+          el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }}
+      />
     </div>
   );
 }

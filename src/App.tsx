@@ -93,26 +93,36 @@ function AppContent() {
     }, 2000 + Math.random() * 2000);
   }, []);
 
+  const handleClearHistory = useCallback((chatId: string) => {
+    if (confirm('Очистить историю сообщений?')) {
+      setChats(prev => prev.map(chat =>
+        chat.id === chatId
+          ? { ...chat, messages: [], lastMessage: 'История очищена' }
+          : chat
+      ));
+    }
+  }, []);
+
   const handleBack = useCallback(() => {
     setIsMobileChatOpen(false);
   }, []);
 
-  // Если настройки — показываем компонент настроек
+  // Настройки
   if (activeTab === 'settings') {
     return (
       <div className="app-container">
         <LeftSidebar
           activeTab={activeTab}
           onTabChange={setActiveTab}
-          onMenuClick={() => console.log('Menu clicked')}
-          onSearchClick={() => console.log('Search clicked')}
+          onMenuClick={() => {}}
+          onSearchClick={() => {}}
         />
         <Settings />
       </div>
     );
   }
 
-  // Если НЕ "Чаты" — показываем соответствующий компонент
+  // Не чаты
   if (activeTab !== 'chats') {
     let contentComponent;
     
@@ -135,8 +145,8 @@ function AppContent() {
         <LeftSidebar
           activeTab={activeTab}
           onTabChange={setActiveTab}
-          onMenuClick={() => console.log('Menu clicked')}
-          onSearchClick={() => console.log('Search clicked')}
+          onMenuClick={() => {}}
+          onSearchClick={() => {}}
         />
         <div className="chat-window-wrapper">
           {contentComponent}
@@ -145,14 +155,14 @@ function AppContent() {
     );
   }
 
-  // Если "Чаты" — показываем список чатов + окно переписки
+  // Чаты
   return (
     <div className="app-container">
       <LeftSidebar
         activeTab={activeTab}
         onTabChange={setActiveTab}
-        onMenuClick={() => console.log('Menu clicked')}
-        onSearchClick={() => console.log('Search clicked')}
+        onMenuClick={() => {}}
+        onSearchClick={() => {}}
       />
 
       <div className={`chat-list-wrapper ${isMobileChatOpen ? 'hidden-mobile' : ''}`}>
@@ -167,12 +177,13 @@ function AppContent() {
         />
       </div>
 
-      <div className={`chat-window-wrapper ${!isMobileChatOpen ? '' : ''}`}>
+      <div className="chat-window-wrapper">
         {activeChat ? (
           <ChatWindow
             chat={activeChat}
             onSendMessage={handleSendMessage}
             onBack={handleBack}
+            onClearHistory={handleClearHistory}
           />
         ) : (
           <EmptyChatState />

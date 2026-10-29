@@ -1,16 +1,18 @@
 import { useTheme, ThemeType } from '../contexts/ThemeContext';
+import WallpaperPicker from './WallpaperPicker';
 
 export default function Settings() {
-  const { theme, setTheme, customAccentColor, setCustomAccentColor, rainbowColors, setRainbowColors } = useTheme();
+  const { theme, setTheme, customAccentColor, setCustomAccentColor, customColors, setCustomColors } = useTheme();
 
   const themes: { id: ThemeType; name: string; icon: string; description: string }[] = [
     { id: 'dark', name: 'Тёмная', icon: '🌙', description: 'Классическая тёмная тема' },
     { id: 'light', name: 'Светлая', icon: '☀️', description: 'Светлая тема для дневного использования' },
-    { id: 'rainbow', name: 'Радужная', icon: '🌈', description: 'Яркая радужная тема' },
+    { id: 'custom', name: 'Своя', icon: '🎨', description: 'Полностью настраиваемая тема' },
+    { id: 'windows98', name: 'Windows 98', icon: '💾', description: 'Олдскул интерфейс' },
   ];
 
-  const handleRainbowColorChange = (key: keyof typeof rainbowColors, value: string) => {
-    setRainbowColors({ ...rainbowColors, [key]: value });
+  const handleCustomColorChange = (key: keyof typeof customColors, value: string) => {
+    setCustomColors({ ...customColors, [key]: value });
   };
 
   return (
@@ -73,97 +75,57 @@ export default function Settings() {
           </div>
         )}
 
-        {/* Кастомизация радужной темы */}
-        {theme === 'rainbow' && (
+        {/* Кастомизация темы "Своя" */}
+        {theme === 'custom' && (
           <div className="settings-section">
-            <h2 className="settings-section-title">Кастомизация радужной темы</h2>
+            <h2 className="settings-section-title">Кастомизация темы</h2>
             <div className="rainbow-customizer">
               <div className="color-picker-row">
                 <label className="color-label">Основной фон</label>
                 <div className="color-input-wrapper">
-                  <input
-                    type="color"
-                    value={rainbowColors.primary}
-                    onChange={(e) => handleRainbowColorChange('primary', e.target.value)}
-                    className="color-input"
-                  />
-                  <span className="color-value">{rainbowColors.primary}</span>
+                  <input type="color" value={customColors.primary} onChange={(e) => handleCustomColorChange('primary', e.target.value)} className="color-input" />
+                  <span className="color-value">{customColors.primary}</span>
                 </div>
               </div>
-
               <div className="color-picker-row">
                 <label className="color-label">Вторичный фон</label>
                 <div className="color-input-wrapper">
-                  <input
-                    type="color"
-                    value={rainbowColors.secondary}
-                    onChange={(e) => handleRainbowColorChange('secondary', e.target.value)}
-                    className="color-input"
-                  />
-                  <span className="color-value">{rainbowColors.secondary}</span>
+                  <input type="color" value={customColors.secondary} onChange={(e) => handleCustomColorChange('secondary', e.target.value)} className="color-input" />
+                  <span className="color-value">{customColors.secondary}</span>
                 </div>
               </div>
-
               <div className="color-picker-row">
                 <label className="color-label">Третичный фон</label>
                 <div className="color-input-wrapper">
-                  <input
-                    type="color"
-                    value={rainbowColors.tertiary}
-                    onChange={(e) => handleRainbowColorChange('tertiary', e.target.value)}
-                    className="color-input"
-                  />
-                  <span className="color-value">{rainbowColors.tertiary}</span>
+                  <input type="color" value={customColors.tertiary} onChange={(e) => handleCustomColorChange('tertiary', e.target.value)} className="color-input" />
+                  <span className="color-value">{customColors.tertiary}</span>
                 </div>
               </div>
-
               <div className="color-picker-row">
                 <label className="color-label">Акцентный цвет</label>
                 <div className="color-input-wrapper">
-                  <input
-                    type="color"
-                    value={rainbowColors.accent}
-                    onChange={(e) => handleRainbowColorChange('accent', e.target.value)}
-                    className="color-input"
-                  />
-                  <span className="color-value">{rainbowColors.accent}</span>
+                  <input type="color" value={customColors.accent} onChange={(e) => handleCustomColorChange('accent', e.target.value)} className="color-input" />
+                  <span className="color-value">{customColors.accent}</span>
                 </div>
               </div>
-
               <div className="color-picker-row">
                 <label className="color-label">Основной текст</label>
                 <div className="color-input-wrapper">
-                  <input
-                    type="color"
-                    value={rainbowColors.textPrimary}
-                    onChange={(e) => handleRainbowColorChange('textPrimary', e.target.value)}
-                    className="color-input"
-                  />
-                  <span className="color-value">{rainbowColors.textPrimary}</span>
+                  <input type="color" value={customColors.textPrimary} onChange={(e) => handleCustomColorChange('textPrimary', e.target.value)} className="color-input" />
+                  <span className="color-value">{customColors.textPrimary}</span>
                 </div>
               </div>
-
               <div className="color-picker-row">
                 <label className="color-label">Вторичный текст</label>
                 <div className="color-input-wrapper">
-                  <input
-                    type="color"
-                    value={rainbowColors.textSecondary}
-                    onChange={(e) => handleRainbowColorChange('textSecondary', e.target.value)}
-                    className="color-input"
-                  />
-                  <span className="color-value">{rainbowColors.textSecondary}</span>
+                  <input type="color" value={customColors.textSecondary} onChange={(e) => handleCustomColorChange('textSecondary', e.target.value)} className="color-input" />
+                  <span className="color-value">{customColors.textSecondary}</span>
                 </div>
               </div>
-
               <button
-                onClick={() => setRainbowColors({
-                  primary: '#1a0a2e',
-                  secondary: '#16213e',
-                  tertiary: '#0f3460',
-                  accent: '#ff00ff',
-                  textPrimary: '#ffffff',
-                  textSecondary: '#ffd700',
+                onClick={() => setCustomColors({
+                  primary: '#1a0a2e', secondary: '#16213e', tertiary: '#0f3460',
+                  accent: '#ff00ff', textPrimary: '#ffffff', textSecondary: '#ffd700',
                 })}
                 className="reset-btn"
               >
@@ -172,6 +134,12 @@ export default function Settings() {
             </div>
           </div>
         )}
+
+        {/* Обои чата */}
+        <div className="settings-section">
+          <h2 className="settings-section-title">Обои чата</h2>
+          <WallpaperPicker />
+        </div>
 
         {/* О приложении */}
         <div className="settings-section">

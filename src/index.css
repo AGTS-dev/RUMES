@@ -1117,6 +1117,592 @@ body {
   font-size: 14px;
 }
 
+/* App Logo */
+.app-logo {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+  flex: 1;
+}
+
+[data-theme="windows98"] .app-logo {
+  font-family: 'MS Sans Serif', 'Tahoma', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+/* ===== WALLPAPERS ===== */
+.messages-container[data-wallpaper="default"] {
+  background-color: var(--bg-primary);
+}
+
+.messages-container[data-wallpaper="gradient-blue"] {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.messages-container[data-wallpaper="gradient-sunset"] {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.messages-container[data-wallpaper="gradient-ocean"] {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.messages-container[data-wallpaper="gradient-forest"] {
+  background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%);
+}
+
+.messages-container[data-wallpaper="gradient-night"] {
+  background: linear-gradient(135deg, #000428 0%, #004e92 100%);
+}
+
+.messages-container[data-wallpaper="pattern-dots"] {
+  background-color: var(--bg-primary);
+  background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.messages-container[data-wallpaper="pattern-grid"] {
+  background-color: var(--bg-primary);
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+.messages-container[data-wallpaper="solid-dark"] {
+  background: #000000;
+}
+
+.messages-container[data-wallpaper="solid-gray"] {
+  background: #2a2a2a;
+}
+
+/* Wallpaper Picker */
+.wallpaper-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+.wallpaper-item {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  border: 2px solid var(--border-color);
+  cursor: pointer;
+  transition: all 150ms;
+  position: relative;
+  overflow: hidden;
+}
+
+.wallpaper-item:hover {
+  transform: scale(1.05);
+  border-color: var(--accent);
+}
+
+.wallpaper-item.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.wallpaper-check {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 32px;
+  background: var(--accent);
+  color: var(--bg-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== CALL MODAL ===== */
+.call-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 200ms ease;
+}
+
+.call-modal {
+  width: 90%;
+  max-width: 400px;
+  background: var(--bg-secondary);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.call-modal-content {
+  padding: 40px 20px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.call-video-preview {
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: #000;
+  border-radius: 12px;
+  position: relative;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.call-video-main {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.call-video-self {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 80px;
+  height: 60px;
+  background: #333;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-color);
+}
+
+.call-video-self-label {
+  color: #fff;
+  font-size: 11px;
+}
+
+.call-audio-interface {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.avatar-large {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 36px;
+  font-weight: 500;
+}
+
+.avatar-xlarge {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 44px;
+  font-weight: 500;
+}
+
+.call-contact-name {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.call-status {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.call-controls {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.call-control-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 150ms;
+}
+
+.call-control-btn:hover {
+  background: var(--bg-hover);
+  transform: scale(1.05);
+}
+
+.call-control-btn.end-call {
+  background: #ef4444;
+  color: #fff;
+}
+
+.call-control-btn.end-call:hover {
+  background: #dc2626;
+}
+
+/* ===== CHAT MENU ===== */
+.chat-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 6px;
+  min-width: 220px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  animation: fadeIn 150ms ease;
+}
+
+.chat-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 150ms;
+  text-align: left;
+}
+
+.chat-menu-item:hover {
+  background: var(--bg-hover);
+}
+
+.chat-menu-item.danger {
+  color: #ef4444;
+}
+
+.chat-menu-item.danger:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.chat-menu-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 4px 0;
+}
+
+/* ===== CHAT SEARCH ===== */
+.chat-search-overlay {
+  position: absolute;
+  top: 56px;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  animation: fadeIn 150ms ease;
+}
+
+.chat-search-panel {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  padding: 12px;
+}
+
+.chat-search-header {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.chat-search-input {
+  flex: 1;
+  background: var(--bg-input);
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: var(--text-primary);
+  font-size: 14px;
+  outline: none;
+}
+
+.chat-search-input:focus {
+  background: var(--bg-hover);
+}
+
+.chat-search-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-search-close:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.chat-search-results {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 8px;
+}
+
+.chat-search-empty {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 13px;
+}
+
+.chat-search-result {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 150ms;
+  text-align: left;
+  gap: 12px;
+}
+
+.chat-search-result:hover {
+  background: var(--bg-hover);
+}
+
+.chat-search-result-text {
+  font-size: 14px;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-search-result-time {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+/* ===== WINDOWS 98 THEME ===== */
+[data-theme="windows98"] {
+  --bg-primary: #008080;
+  --bg-secondary: #c0c0c0;
+  --bg-tertiary: #a0a0a0;
+  --bg-hover: #d4d4d4;
+  --bg-active: #000080;
+  --bg-input: #ffffff;
+  --bg-message-in: #c0c0c0;
+  --bg-message-out: #ffffcc;
+  
+  --text-primary: #000000;
+  --text-secondary: #000000;
+  --text-tertiary: #404040;
+  --text-accent: #000000;
+  
+  --border-color: #808080;
+  --border-light: #ffffff;
+  
+  --accent: #000080;
+  --accent-hover: #0000a0;
+  
+  --online: #00ff00;
+  --unread: #ff0000;
+}
+
+[data-theme="windows98"] * {
+  font-family: 'MS Sans Serif', 'Tahoma', 'Arial', sans-serif !important;
+}
+
+[data-theme="windows98"] .left-sidebar,
+[data-theme="windows98"] .chat-list-panel,
+[data-theme="windows98"] .chat-header,
+[data-theme="windows98"] .input-area,
+[data-theme="windows98"] .header {
+  background: #c0c0c0 !important;
+  border: 2px outset #ffffff !important;
+  border-right-color: #808080 !important;
+  border-bottom-color: #808080 !important;
+}
+
+[data-theme="windows98"] .chat-item.active {
+  background: #000080 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="windows98"] .chat-item.active .chat-name,
+[data-theme="windows98"] .chat-item.active .chat-preview {
+  color: #ffffff !important;
+}
+
+[data-theme="windows98"] .message-bubble.incoming {
+  background: #c0c0c0 !important;
+  border: 2px outset #ffffff !important;
+  border-right-color: #808080 !important;
+  border-bottom-color: #808080 !important;
+  border-radius: 0 !important;
+  color: #000000 !important;
+}
+
+[data-theme="windows98"] .message-bubble.outgoing {
+  background: #ffffcc !important;
+  border: 2px inset #808080 !important;
+  border-left-color: #ffffff !important;
+  border-top-color: #ffffff !important;
+  border-radius: 0 !important;
+  color: #000000 !important;
+}
+
+[data-theme="windows98"] .message-text {
+  color: #000000 !important;
+}
+
+[data-theme="windows98"] .icon-btn {
+  border: 2px outset #ffffff !important;
+  border-right-color: #808080 !important;
+  border-bottom-color: #808080 !important;
+  border-radius: 0 !important;
+  background: #c0c0c0 !important;
+}
+
+[data-theme="windows98"] .icon-btn:active {
+  border: 2px inset #808080 !important;
+  border-left-color: #ffffff !important;
+  border-top-color: #ffffff !important;
+}
+
+[data-theme="windows98"] .sidebar-icon {
+  border: 2px outset #ffffff !important;
+  border-right-color: #808080 !important;
+  border-bottom-color: #808080 !important;
+  border-radius: 0 !important;
+  background: #c0c0c0 !important;
+}
+
+[data-theme="windows98"] .sidebar-icon.active {
+  background: #000080 !important;
+  color: #ffffff !important;
+  border: 2px inset #808080 !important;
+}
+
+[data-theme="windows98"] .search-input,
+[data-theme="windows98"] .message-input {
+  background: #ffffff !important;
+  border: 2px inset #808080 !important;
+  border-left-color: #ffffff !important;
+  border-top-color: #ffffff !important;
+  border-radius: 0 !important;
+  color: #000000 !important;
+}
+
+[data-theme="windows98"] .tab {
+  border: 2px outset #ffffff !important;
+  border-bottom: none !important;
+  border-radius: 0 !important;
+  background: #c0c0c0 !important;
+  color: #000000 !important;
+  margin-right: 2px;
+}
+
+[data-theme="windows98"] .tab.active {
+  background: #000080 !important;
+  color: #ffffff !important;
+  border: 2px inset #808080 !important;
+}
+
+[data-theme="windows98"] .avatar {
+  border: 2px outset #ffffff !important;
+  border-right-color: #808080 !important;
+  border-bottom-color: #808080 !important;
+  border-radius: 0 !important;
+}
+
+[data-theme="windows98"] .unread-badge {
+  background: #ff0000 !important;
+  color: #ffffff !important;
+  border-radius: 0 !important;
+  border: 1px solid #800000;
+}
+
+[data-theme="windows98"] .messages-container {
+  background: #008080 !important;
+}
+
+[data-theme="windows98"] .date-separator-text {
+  background: #c0c0c0 !important;
+  border: 2px outset #ffffff !important;
+  border-right-color: #808080 !important;
+  border-bottom-color: #808080 !important;
+  border-radius: 0 !important;
+  color: #000000 !important;
+}
+
+[data-theme="windows98"] .theme-card {
+  border: 2px outset #ffffff !important;
+  border-right-color: #808080 !important;
+  border-bottom-color: #808080 !important;
+  border-radius: 0 !important;
+  background: #c0c0c0 !important;
+}
+
+[data-theme="windows98"] .theme-card.active {
+  border: 2px inset #808080 !important;
+  background: #000080 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="windows98"] .theme-card.active .theme-name,
+[data-theme="windows98"] .theme-card.active .theme-description {
+  color: #ffffff !important;
+}
+
+/* Back button */
+.back-btn {
+  display: none;
+  margin-right: 8px;
+}
+
+@media (max-width: 900px) {
+  .back-btn {
+    display: flex;
+  }
+}
+
 /* Mobile responsive */
 @media (max-width: 900px) {
   .left-sidebar {

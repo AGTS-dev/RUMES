@@ -1,8 +1,8 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-export type ThemeType = 'dark' | 'light' | 'rainbow';
+export type ThemeType = 'dark' | 'light' | 'custom' | 'windows98';
 
-export interface RainbowColors {
+export interface CustomColors {
   primary: string;
   secondary: string;
   tertiary: string;
@@ -16,11 +16,13 @@ interface ThemeContextType {
   setTheme: (theme: ThemeType) => void;
   customAccentColor: string;
   setCustomAccentColor: (color: string) => void;
-  rainbowColors: RainbowColors;
-  setRainbowColors: (colors: RainbowColors) => void;
+  customColors: CustomColors;
+  setCustomColors: (colors: CustomColors) => void;
+  wallpaper: string;
+  setWallpaper: (wallpaper: string) => void;
 }
 
-const defaultRainbowColors: RainbowColors = {
+const defaultCustomColors: CustomColors = {
   primary: '#1a0a2e',
   secondary: '#16213e',
   tertiary: '#0f3460',
@@ -29,31 +31,18 @@ const defaultRainbowColors: RainbowColors = {
   textSecondary: '#ffd700',
 };
 
-// Все CSS-переменные, которые могут быть переопределены
 const OVERRIDABLE_VARS = [
-  '--bg-primary',
-  '--bg-secondary',
-  '--bg-tertiary',
-  '--bg-hover',
-  '--bg-active',
-  '--bg-input',
-  '--bg-message-in',
-  '--bg-message-out',
-  '--text-primary',
-  '--text-secondary',
-  '--text-tertiary',
-  '--text-accent',
-  '--accent',
-  '--accent-hover',
-  '--border-color',
-  '--border-light',
-  '--online',
-  '--unread',
+  '--bg-primary', '--bg-secondary', '--bg-tertiary',
+  '--bg-hover', '--bg-active', '--bg-input',
+  '--bg-message-in', '--bg-message-out',
+  '--text-primary', '--text-secondary', '--text-tertiary', '--text-accent',
+  '--accent', '--accent-hover',
+  '--border-color', '--border-light',
+  '--online', '--unread',
 ];
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-// Функция очистки всех inline overrides
 function clearAllOverrides() {
   OVERRIDABLE_VARS.forEach((varName) => {
     document.documentElement.style.removeProperty(varName);
@@ -63,6 +52,7 @@ function clearAllOverrides() {
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<ThemeType>(() => {
     const saved = localStorage.getItem('rumes-theme');
+    if (saved === 'rainbow') return 'custom'; // миграция
     return (saved as ThemeType) || 'dark';
   });
 
@@ -71,41 +61,40 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     return saved || '#ffffff';
   });
 
-  const [rainbowColors, setRainbowColorsState] = useState<RainbowColors>(() => {
-    const saved = localStorage.getItem('rumes-rainbow-colors');
-    return saved ? JSON.parse(saved) : defaultRainbowColors;
+  const [customColors, setCustomColorsState] = useState<CustomColors>(() => {
+    const saved = localStorage.getItem('rumes-custom-colors');
+    return saved ? JSON.parse(saved) : defaultCustomColors;
   });
 
-  // Функция применения темы — вызывается при любом изменении
-  const applyTheme = (currentTheme: ThemeType, accentColor: string, rainbow: RainbowColors) => {
-    // Сначала очищаем все inline overrides
-    clearAllOverrides();
+  const [wallpaper, setWallpaperState] = useState<string>(() => {
+    return localStorage.getItem('rumes-wallpaper') || 'default';
+  });
 
-    // Устанавливаем data-theme для CSS
+  const applyTheme = (currentTheme: ThemeType, accentColor: string, custom: CustomColors, wp: string) => {
+    clearAllOverrides();
     document.documentElement.setAttribute('data-theme', currentTheme);
 
-    // Затем применяем overrides в зависимости от текущей темы
     if (currentTheme === 'dark' || currentTheme === 'light') {
-      // Для dark/light применяем только кастомный акцент
       document.documentElement.style.setProperty('--accent', accentColor);
-    } else if (currentTheme === 'rainbow') {
-      // Для rainbow применяем все кастомные цвета
-      document.documentElement.style.setProperty('--bg-primary', rainbow.primary);
-      document.documentElement.style.setProperty('--bg-secondary', rainbow.secondary);
-      document.documentElement.style.setProperty('--bg-tertiary', rainbow.tertiary);
-      document.documentElement.style.setProperty('--accent', rainbow.accent);
-      document.documentElement.style.setProperty('--text-primary', rainbow.textPrimary);
-      document.documentElement.style.setProperty('--text-secondary', rainbow.textSecondary);
+    } else if (currentTheme === 'custom') {
+      document.documentElement.style.setProperty('--bg-primary', custom.primary);
+      document.documentElement.style.setProperty('--bg-secondary', custom.secondary);
+      document.documentElement.style.setProperty('--bg-tertiary', custom.tertiary);
+      document.documentElement.style.setProperty('--accent', custom.accent);
+      document.documentElement.style.setProperty('--text-primary', custom.textPrimary);
+      document.documentElement.style.setProperty('--text-secondary', custom.textSecondary);
     }
+    // windows98 использует только CSS, без overrides
+    
+    // Обои
+    document.documentElement.setAttribute('data-wallpaper', wp);
   };
 
-  // При изменении темы — пересчитываем всё
   useEffect(() => {
     localStorage.setItem('rumes-theme', theme);
-    applyTheme(theme, customAccentColor, rainbowColors);
+    applyTheme(theme, customAccentColor, customColors, wallpaper);
   }, [theme]);
 
-  // При изменении акцентного цвета — применяем только если dark/light
   useEffect(() => {
     localStorage.setItem('rumes-custom-accent', customAccentColor);
     if (theme === 'dark' || theme === 'light') {
@@ -115,42 +104,35 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }
   }, [customAccentColor]);
 
-  // При изменении цветов радуги — применяем только если rainbow
   useEffect(() => {
-    localStorage.setItem('rumes-rainbow-colors', JSON.stringify(rainbowColors));
-    if (theme === 'rainbow') {
+    localStorage.setItem('rumes-custom-colors', JSON.stringify(customColors));
+    if (theme === 'custom') {
       clearAllOverrides();
       document.documentElement.setAttribute('data-theme', theme);
-      document.documentElement.style.setProperty('--bg-primary', rainbowColors.primary);
-      document.documentElement.style.setProperty('--bg-secondary', rainbowColors.secondary);
-      document.documentElement.style.setProperty('--bg-tertiary', rainbowColors.tertiary);
-      document.documentElement.style.setProperty('--accent', rainbowColors.accent);
-      document.documentElement.style.setProperty('--text-primary', rainbowColors.textPrimary);
-      document.documentElement.style.setProperty('--text-secondary', rainbowColors.textSecondary);
+      document.documentElement.style.setProperty('--bg-primary', customColors.primary);
+      document.documentElement.style.setProperty('--bg-secondary', customColors.secondary);
+      document.documentElement.style.setProperty('--bg-tertiary', customColors.tertiary);
+      document.documentElement.style.setProperty('--accent', customColors.accent);
+      document.documentElement.style.setProperty('--text-primary', customColors.textPrimary);
+      document.documentElement.style.setProperty('--text-secondary', customColors.textSecondary);
     }
-  }, [rainbowColors]);
+  }, [customColors]);
 
-  // Обёртки для setState, чтобы можно было использовать в контексте
-  const setTheme = (newTheme: ThemeType) => {
-    setThemeState(newTheme);
-  };
-
-  const setCustomAccentColor = (color: string) => {
-    setCustomAccentColorState(color);
-  };
-
-  const setRainbowColors = (colors: RainbowColors) => {
-    setRainbowColorsState(colors);
-  };
+  useEffect(() => {
+    localStorage.setItem('rumes-wallpaper', wallpaper);
+    document.documentElement.setAttribute('data-wallpaper', wallpaper);
+  }, [wallpaper]);
 
   return (
     <ThemeContext.Provider value={{ 
       theme, 
-      setTheme,
+      setTheme: setThemeState,
       customAccentColor,
-      setCustomAccentColor,
-      rainbowColors,
-      setRainbowColors
+      setCustomAccentColor: setCustomAccentColorState,
+      customColors,
+      setCustomColors: setCustomColorsState,
+      wallpaper,
+      setWallpaper: setWallpaperState,
     }}>
       {children}
     </ThemeContext.Provider>
