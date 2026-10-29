@@ -167,6 +167,8 @@ body {
   flex-direction: column;
   background: var(--bg-primary);
   min-width: 0;
+  position: relative;
+  overflow-x: hidden;
 }
 
 /* Header */
@@ -365,6 +367,20 @@ body {
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border-color);
   flex-shrink: 0;
+  position: relative;
+  z-index: 60;
+}
+
+.chat-header-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  align-items: center;
+  margin-left: auto;
+}
+
+.chat-menu-container {
+  position: relative;
 }
 
 .chat-header-avatar {
@@ -1134,49 +1150,49 @@ body {
 
 /* ===== WALLPAPERS ===== */
 .messages-container[data-wallpaper="default"] {
-  background-color: var(--bg-primary);
+  background-color: var(--bg-primary) !important;
 }
 
 .messages-container[data-wallpaper="gradient-blue"] {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
 }
 
 .messages-container[data-wallpaper="gradient-sunset"] {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
 }
 
 .messages-container[data-wallpaper="gradient-ocean"] {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
 }
 
 .messages-container[data-wallpaper="gradient-forest"] {
-  background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%);
+  background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%) !important;
 }
 
 .messages-container[data-wallpaper="gradient-night"] {
-  background: linear-gradient(135deg, #000428 0%, #004e92 100%);
+  background: linear-gradient(135deg, #000428 0%, #004e92 100%) !important;
 }
 
 .messages-container[data-wallpaper="pattern-dots"] {
-  background-color: var(--bg-primary);
-  background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
-  background-size: 20px 20px;
+  background-color: var(--bg-primary) !important;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px) !important;
+  background-size: 20px 20px !important;
 }
 
 .messages-container[data-wallpaper="pattern-grid"] {
-  background-color: var(--bg-primary);
+  background-color: var(--bg-primary) !important;
   background-image: 
     linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
-  background-size: 30px 30px;
+    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px) !important;
+  background-size: 30px 30px !important;
 }
 
 .messages-container[data-wallpaper="solid-dark"] {
-  background: #000000;
+  background: #000000 !important;
 }
 
 .messages-container[data-wallpaper="solid-gray"] {
-  background: #2a2a2a;
+  background: #2a2a2a !important;
 }
 
 /* Wallpaper Picker */
@@ -1379,7 +1395,7 @@ body {
   padding: 6px;
   min-width: 220px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  z-index: 100;
+  z-index: 1000;
   animation: fadeIn 150ms ease;
 }
 
@@ -1425,6 +1441,8 @@ body {
   right: 0;
   z-index: 50;
   animation: fadeIn 150ms ease;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .chat-search-panel {
@@ -1659,7 +1677,8 @@ body {
   border: 1px solid #800000;
 }
 
-[data-theme="windows98"] .messages-container {
+/* Windows 98 обои применяются только если не выбран кастомный wallpaper */
+[data-theme="windows98"] .messages-container:not([data-wallpaper]) {
   background: #008080 !important;
 }
 
