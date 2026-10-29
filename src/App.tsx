@@ -1,13 +1,19 @@
 import { useState, useCallback } from 'react';
-import Sidebar from './components/Sidebar';
+import LeftSidebar from './components/LeftSidebar';
+import ChatList from './components/ChatList';
 import ChatWindow from './components/ChatWindow';
 import { mockChats, Chat, Message } from './data/mockData';
+
+type TabType = 'chats' | 'contacts' | 'calls' | 'saved' | 'settings';
+type FilterType = 'all' | 'personal' | 'groups' | 'channels' | 'bots';
 
 function App() {
   const [chats, setChats] = useState<Chat[]>(mockChats);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileChatOpen, setIsMobileChatOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<TabType>('chats');
+  const [activeFilter, setActiveFilter] = useState<FilterType>('all');
 
   const activeChat = chats.find(chat => chat.id === activeChatId) || null;
 
@@ -89,28 +95,34 @@ function App() {
   }, []);
 
   return (
-    <div className="h-screen w-screen flex overflow-hidden bg-[#0b0d14] relative">
-      {/* Global background */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="bg-orb w-[600px] h-[600px] bg-indigo-600 opacity-[0.03] top-1/4 left-1/4" />
-        <div className="bg-orb w-[500px] h-[500px] bg-violet-500 opacity-[0.02] bottom-0 right-1/4" />
+    <div className="h-screen w-screen flex overflow-hidden bg-telegram-bg">
+      {/* Left Sidebar (70px) */}
+      <div className="hidden md:block">
+        <LeftSidebar
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          onMenuClick={() => console.log('Menu clicked')}
+          onSearchClick={() => console.log('Search clicked')}
+        />
       </div>
 
-      {/* Sidebar */}
-      <div className={`${isMobileChatOpen ? 'hidden md:flex' : 'flex'} flex-col w-full md:w-[360px] lg:w-[400px] flex-shrink-0 relative z-20 border-r border-white/5`}>
-        <Sidebar
+      {/* Chat List */}
+      <div className={`${isMobileChatOpen ? 'hidden md:flex' : 'flex'} flex-col w-full md:w-[380px] lg:w-[420px] flex-shrink-0`}>
+        <ChatList
           chats={chats}
           activeChatId={activeChatId}
           onSelectChat={handleSelectChat}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
+          activeFilter={activeFilter}
+          onFilterChange={setActiveFilter}
         />
       </div>
 
       {/* Chat Window */}
-      <div className={`${isMobileChatOpen ? 'flex' : 'hidden md:flex'} flex-col flex-1 min-w-0 relative z-10`}>
+      <div className={`${isMobileChatOpen ? 'flex' : 'hidden md:flex'} flex-col flex-1 min-w-0`}>
         {activeChat ? (
-          <div className="h-full anim-fade-up">
+          <div className="h-full anim-fade">
             <ChatWindow
               chat={activeChat}
               onSendMessage={handleSendMessage}
@@ -127,32 +139,17 @@ function App() {
 
 function EmptyState() {
   return (
-    <div className="flex-1 flex items-center justify-center relative overflow-hidden glass-panel">
-      {/* Background orbs */}
-      <div className="bg-orb w-80 h-80 bg-indigo-600 opacity-[0.05] top-1/4 left-1/4 anim-float" />
-      <div className="bg-orb w-64 h-64 bg-violet-500 opacity-[0.04] bottom-1/4 right-1/4 anim-float" style={{ animationDelay: '1.5s' }} />
-
-      <div className="text-center relative z-10 anim-fade-up">
-        {/* Icon */}
-        <div className="relative inline-block mb-6">
-          <div className="w-20 h-20 rounded-2xl glass-surface flex items-center justify-center shadow-xl">
-            <span className="text-4xl anim-float">💬</span>
-          </div>
-          <div className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 opacity-60 blur-sm" />
-          <div className="absolute -bottom-1 -left-2 w-4 h-4 rounded-full bg-gradient-to-br from-violet-400 to-indigo-500 opacity-40 blur-sm" />
+    <div className="flex-1 flex items-center justify-center chat-bg">
+      <div className="text-center">
+        <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-telegram-panel flex items-center justify-center">
+          <svg className="w-10 h-10 text-telegram-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
         </div>
-
-        <h2 className="text-xl font-semibold gradient-text mb-2">TeleChat Messenger</h2>
-        <p className="text-gray-500 text-sm max-w-xs mx-auto leading-relaxed">
-          Выберите чат из списка, чтобы начать общение
+        <h2 className="text-xl font-medium text-telegram-gray mb-2">Telegram Web</h2>
+        <p className="text-[14px] text-telegram-gray">
+          Выберите чат для начала общения
         </p>
-
-        {/* Decorative dots */}
-        <div className="flex justify-center gap-2 mt-6">
-          <span className="w-1.5 h-1.5 rounded-full bg-indigo-500/50 typing-dot-1" />
-          <span className="w-1.5 h-1.5 rounded-full bg-violet-500/50 typing-dot-2" />
-          <span className="w-1.5 h-1.5 rounded-full bg-indigo-500/50 typing-dot-3" />
-        </div>
       </div>
     </div>
   );

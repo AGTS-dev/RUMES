@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -11,195 +9,177 @@
 }
 
 html, body, #root {
-  height: 100%;
   width: 100%;
+  height: 100%;
   overflow: hidden;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 body {
-  background: #0b0d14;
+  background: #0e1621;
   color: #fff;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  line-height: 1.5;
 }
 
 /* Scrollbar */
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
+::-webkit-scrollbar {
+  width: 6px;
 }
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 ::selection {
-  background: rgba(99, 102, 241, 0.4);
+  background: #2b5278;
   color: #fff;
 }
 
-/* ===== GLASS EFFECTS ===== */
-.glass-panel {
-  background: rgba(15, 17, 26, 0.65);
-  backdrop-filter: blur(40px) saturate(150%);
-  -webkit-backdrop-filter: blur(40px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+/* Telegram colors */
+.bg-telegram-bg { background: #0e1621; }
+.bg-telegram-panel { background: #17212b; }
+.bg-telegram-active { background: #2b5278; }
+.bg-telegram-incoming { background: #182533; }
+.bg-telegram-outgoing { background: #2b5278; }
+.bg-telegram-search { background: #242f3d; }
+.text-telegram-blue { color: #5ca0d4; }
+.text-telegram-gray { color: #6c7883; }
+.border-telegram { border-color: #0e1621; }
+
+/* Hover effects */
+.hover-telegram {
+  transition: background-color 150ms ease;
 }
 
-.glass-surface {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.glass-input {
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  transition: all 0.25s ease;
-}
-
-.glass-input:focus {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(99, 102, 241, 0.4);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1), 0 4px 20px rgba(99, 102, 241, 0.08);
-}
-
-.glass-btn {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.glass-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-1px);
-}
-
-.glass-btn:active {
-  transform: scale(0.93);
-}
-
-/* Message bubbles */
-.msg-own {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.35), rgba(79, 70, 229, 0.25));
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(99, 102, 241, 0.2);
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-}
-
-.msg-other {
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+.hover-telegram:hover {
+  background: #202b36;
 }
 
 /* Chat item */
 .chat-item {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid transparent;
+  transition: background-color 150ms ease;
+  cursor: pointer;
 }
 
 .chat-item:hover {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(255, 255, 255, 0.04);
+  background: #202b36;
 }
 
 .chat-item.active {
-  background: rgba(99, 102, 241, 0.08);
-  border-color: rgba(99, 102, 241, 0.15);
-  box-shadow: 0 0 20px rgba(99, 102, 241, 0.05);
+  background: #2b5278;
 }
 
-/* Gradient text */
-.gradient-text {
-  background: linear-gradient(135deg, #818cf8, #6366f1, #a78bfa);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* Icon button */
+.icon-btn {
+  transition: all 150ms ease;
+  cursor: pointer;
 }
 
-/* Send button */
-.send-btn {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
 }
 
-.send-btn:hover {
-  box-shadow: 0 6px 25px rgba(99, 102, 241, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  transform: translateY(-1px) scale(1.03);
+.icon-btn:active {
+  transform: scale(0.95);
 }
 
-.send-btn:active {
-  transform: scale(0.92);
+/* Sidebar icon */
+.sidebar-icon {
+  transition: all 150ms ease;
+  cursor: pointer;
 }
 
-/* Unread badge */
-.unread-badge {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+.sidebar-icon:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-icon.active {
+  background: #5ca0d4;
+  color: #fff;
+}
+
+/* Message bubble */
+.msg-incoming {
+  background: #182533;
+  border-radius: 12px 12px 12px 4px;
+}
+
+.msg-outgoing {
+  background: #2b5278;
+  border-radius: 12px 12px 4px 12px;
+}
+
+/* Tab */
+.tab {
+  transition: all 150ms ease;
+  cursor: pointer;
+  color: #6c7883;
+}
+
+.tab:hover {
+  color: #fff;
+}
+
+.tab.active {
+  color: #5ca0d4;
+  border-bottom: 2px solid #5ca0d4;
+}
+
+/* Input */
+.input-telegram {
+  background: #242f3d;
+  transition: background-color 150ms ease;
+}
+
+.input-telegram:focus {
+  background: #2b3a4a;
+  outline: none;
 }
 
 /* Animations */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-@keyframes fadeInLeft {
-  from { opacity: 0; transform: translateX(-10px) scale(0.97); }
-  to { opacity: 1; transform: translateX(0) scale(1); }
-}
-
-@keyframes fadeInRight {
-  from { opacity: 0; transform: translateX(10px) scale(0.97); }
-  to { opacity: 1; transform: translateX(0) scale(1); }
-}
-
-@keyframes slideInLeft {
-  from { transform: translateX(-100%); opacity: 0; }
+@keyframes slideInRight {
+  from { transform: translateX(20px); opacity: 0; }
   to { transform: translateX(0); opacity: 1; }
 }
 
+@keyframes slideInLeft {
+  from { transform: translateX(-20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.anim-fade { animation: fadeIn 200ms ease; }
+.anim-slide-right { animation: slideInRight 200ms ease; }
+.anim-slide-left { animation: slideInLeft 200ms ease; }
+
+/* Typing dots */
 @keyframes typingBounce {
-  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-  30% { transform: translateY(-5px); opacity: 1; }
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-4px); }
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
+.typing-dot-1 { animation: typingBounce 1.4s infinite; }
+.typing-dot-2 { animation: typingBounce 1.4s infinite 0.2s; }
+.typing-dot-3 { animation: typingBounce 1.4s infinite 0.4s; }
 
-@keyframes pulse-soft {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
-}
-
-.anim-fade-up { animation: fadeInUp 0.3s ease forwards; }
-.anim-fade-left { animation: fadeInLeft 0.25s ease forwards; }
-.anim-fade-right { animation: fadeInRight 0.25s ease forwards; }
-.anim-slide-left { animation: slideInLeft 0.3s ease forwards; }
-.anim-float { animation: float 4s ease-in-out infinite; }
-
-.typing-dot-1 { animation: typingBounce 1.2s ease-in-out infinite; }
-.typing-dot-2 { animation: typingBounce 1.2s ease-in-out infinite 0.15s; }
-.typing-dot-3 { animation: typingBounce 1.2s ease-in-out infinite 0.3s; }
-
-/* Background orbs */
-.bg-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(100px);
-  pointer-events: none;
+/* Chat background pattern */
+.chat-bg {
+  background-color: #0e1621;
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(43, 82, 120, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(43, 82, 120, 0.1) 0%, transparent 50%);
 }

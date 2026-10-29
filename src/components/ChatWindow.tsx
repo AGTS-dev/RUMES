@@ -21,16 +21,11 @@ export default function ChatWindow({ chat, onSendMessage, onBack }: ChatWindowPr
     scrollToBottom();
   }, [chat.messages]);
 
-  const shouldShowTail = (index: number) => {
-    if (index === 0) return true;
-    return chat.messages[index].senderId !== chat.messages[index - 1].senderId;
-  };
-
   const groupMessagesByDate = () => {
-    const groups: { date: string; messages: { message: typeof chat.messages[0]; index: number }[] }[] = [];
+    const groups: { date: string; messages: typeof chat.messages }[] = [];
     let currentDate = '';
 
-    chat.messages.forEach((message, index) => {
+    chat.messages.forEach((message) => {
       const dateStr = message.timestamp.toLocaleDateString('ru-RU', {
         day: 'numeric',
         month: 'long',
@@ -41,7 +36,7 @@ export default function ChatWindow({ chat, onSendMessage, onBack }: ChatWindowPr
         groups.push({ date: dateStr, messages: [] });
       }
 
-      groups[groups.length - 1].messages.push({ message, index });
+      groups[groups.length - 1].messages.push(message);
     });
 
     return groups;
@@ -51,33 +46,26 @@ export default function ChatWindow({ chat, onSendMessage, onBack }: ChatWindowPr
 
   return (
     <div className="flex flex-col h-full relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-[#0b0d14]">
-        <div className="bg-orb w-[500px] h-[500px] bg-indigo-600 opacity-[0.04] -top-40 -right-40" />
-        <div className="bg-orb w-[400px] h-[400px] bg-violet-500 opacity-[0.03] -bottom-20 -left-20" />
-      </div>
-
       <ChatHeader chat={chat} onBack={onBack} />
 
       {/* Messages area */}
-      <div className="flex-1 overflow-y-auto px-3 sm:px-6 py-4 relative z-10">
+      <div className="flex-1 overflow-y-auto chat-bg px-4 py-3">
         {messageGroups.map((group) => (
           <div key={group.date}>
             {/* Date separator */}
-            <div className="flex justify-center my-4">
-              <span className="glass-surface text-gray-400 text-[11px] font-medium px-4 py-1.5 rounded-full">
+            <div className="flex justify-center my-3">
+              <span className="bg-telegram-panel/80 text-telegram-gray text-[13px] font-medium px-3 py-1 rounded-full backdrop-blur-sm">
                 {group.date}
               </span>
             </div>
 
             {/* Messages */}
-            {group.messages.map(({ message, index }) => (
+            {group.messages.map((message) => (
               <MessageBubble
                 key={message.id}
                 message={message}
                 isOwn={message.senderId === currentUser.id}
-                showTail={shouldShowTail(index)}
-                isLast={index === chat.messages.length - 1}
+                isGroup={chat.isGroup}
               />
             ))}
           </div>
@@ -85,12 +73,12 @@ export default function ChatWindow({ chat, onSendMessage, onBack }: ChatWindowPr
 
         {/* Typing indicator */}
         {chat.isTyping && (
-          <div className="flex justify-start mt-3 anim-fade-up">
-            <div className="msg-other px-4 py-3 rounded-2xl rounded-bl-sm">
-              <div className="flex gap-1.5 items-center">
-                <span className="w-2 h-2 bg-indigo-400 rounded-full typing-dot-1" />
-                <span className="w-2 h-2 bg-indigo-400 rounded-full typing-dot-2" />
-                <span className="w-2 h-2 bg-indigo-400 rounded-full typing-dot-3" />
+          <div className="flex justify-start mb-1">
+            <div className="msg-incoming px-3 py-2">
+              <div className="flex gap-1">
+                <span className="w-2 h-2 bg-telegram-gray rounded-full typing-dot-1" />
+                <span className="w-2 h-2 bg-telegram-gray rounded-full typing-dot-2" />
+                <span className="w-2 h-2 bg-telegram-gray rounded-full typing-dot-3" />
               </div>
             </div>
           </div>

@@ -3,11 +3,10 @@ import { Message } from '../data/mockData';
 interface MessageBubbleProps {
   message: Message;
   isOwn: boolean;
-  showTail: boolean;
-  isLast: boolean;
+  isGroup?: boolean;
 }
 
-export default function MessageBubble({ message, isOwn, showTail, isLast }: MessageBubbleProps) {
+export default function MessageBubble({ message, isOwn, isGroup }: MessageBubbleProps) {
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
   };
@@ -15,45 +14,49 @@ export default function MessageBubble({ message, isOwn, showTail, isLast }: Mess
   const StatusIcon = () => {
     if (message.status === 'read') {
       return (
-        <svg className="w-3.5 h-3.5 text-indigo-300 flex-shrink-0" viewBox="0 0 16 16" fill="currentColor">
-          <path d="M13.3 2.3a1 1 0 0 1 1.4 1.4l-8 8a1 1 0 0 1-1.4 0l-3-3a1 1 0 0 1 1.4-1.4L6 9.6l7.3-7.3z"/>
-          <path d="M15.3 2.3a1 1 0 0 1 1.4 1.4l-8 8a1 1 0 0 1-1.4 0l-.5-.5 1.4-1.4.1.1 7-7z" opacity="0.7"/>
+        <svg className="w-4 h-4 text-[#5ca0d4] inline-block ml-1" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 1.5l6.5 6.5-1.5 1.5L8 4.5 3 9.5 1.5 8 8 1.5z"/>
+          <path d="M14.5 1.5l1.5 1.5-8 8-4-4 1.5-1.5L8 8l6.5-6.5z" opacity="0.7"/>
         </svg>
       );
     } else if (message.status === 'delivered') {
       return (
-        <svg className="w-3.5 h-3.5 text-gray-500 flex-shrink-0" viewBox="0 0 16 16" fill="currentColor">
-          <path d="M13.3 2.3a1 1 0 0 1 1.4 1.4l-8 8a1 1 0 0 1-1.4 0l-3-3a1 1 0 0 1 1.4-1.4L6 9.6l7.3-7.3z"/>
-          <path d="M15.3 2.3a1 1 0 0 1 1.4 1.4l-8 8a1 1 0 0 1-1.4 0l-.5-.5 1.4-1.4.1.1 7-7z" opacity="0.7"/>
+        <svg className="w-4 h-4 text-telegram-gray inline-block ml-1" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 1.5l6.5 6.5-1.5 1.5L8 4.5 3 9.5 1.5 8 8 1.5z"/>
+          <path d="M14.5 1.5l1.5 1.5-8 8-4-4 1.5-1.5L8 8l6.5-6.5z" opacity="0.7"/>
         </svg>
       );
     } else {
       return (
-        <svg className="w-3 h-3 text-gray-500 flex-shrink-0" viewBox="0 0 16 16" fill="currentColor">
-          <path d="M13.3 2.3a1 1 0 0 1 1.4 1.4l-8 8a1 1 0 0 1-1.4 0l-3-3a1 1 0 0 1 1.4-1.4L6 9.6l7.3-7.3z"/>
+        <svg className="w-3.5 h-3.5 text-telegram-gray inline-block ml-1" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 1.5l6.5 6.5-1.5 1.5L8 4.5 3 9.5 1.5 8 8 1.5z"/>
         </svg>
       );
     }
   };
 
   return (
-    <div
-      className={`flex ${isOwn ? 'justify-end' : 'justify-start'} ${showTail ? 'mt-2.5' : 'mt-0.5'} ${
-        isLast ? (isOwn ? 'anim-fade-right' : 'anim-fade-left') : ''
-      }`}
-    >
+    <div className={`flex ${isOwn ? 'justify-end' : 'justify-start'} mb-1`}>
       <div
-        className={`relative max-w-[85%] sm:max-w-[70%] md:max-w-[60%] px-3 py-2 ${
-          isOwn
-            ? `msg-own ${showTail ? 'rounded-2xl rounded-br-sm' : 'rounded-2xl'}`
-            : `msg-other ${showTail ? 'rounded-2xl rounded-bl-sm' : 'rounded-2xl'}`
+        className={`relative max-w-[65%] px-2.5 py-1.5 ${
+          isOwn ? 'msg-outgoing' : 'msg-incoming'
         }`}
       >
-        <p className="text-[14px] leading-[1.45] text-white/95 break-words whitespace-pre-wrap pr-16">
+        {/* Sender name for groups */}
+        {isGroup && !isOwn && message.senderName && (
+          <p className="text-[13px] font-medium text-telegram-blue mb-0.5">
+            {message.senderName}
+          </p>
+        )}
+
+        {/* Message text */}
+        <p className="text-[14px] text-white leading-relaxed break-words pr-16">
           {message.text}
         </p>
-        <div className={`absolute bottom-1.5 ${isOwn ? 'right-2.5' : 'right-2.5'} flex items-center gap-1 pointer-events-none`}>
-          <span className="text-[10.5px] text-white/40 font-medium">{formatTime(message.timestamp)}</span>
+
+        {/* Time and status */}
+        <div className="absolute bottom-1 right-2 flex items-center gap-0.5">
+          <span className="text-[11px] text-white/60">{formatTime(message.timestamp)}</span>
           {isOwn && <StatusIcon />}
         </div>
       </div>
