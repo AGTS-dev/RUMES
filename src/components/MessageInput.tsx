@@ -31,14 +31,14 @@ export default function MessageInput({ onSendMessage }: MessageInputProps) {
   };
 
   return (
-    <div className="bg-telegram-panel border-t border-telegram px-4 py-2 flex items-end gap-2 flex-shrink-0">
+    <div className="input-area">
       {/* Emoji button */}
-      <button className="icon-btn w-10 h-10 rounded-full flex items-center justify-center text-telegram-gray hover:text-white flex-shrink-0">
+      <button className="icon-btn">
         <Smile size={22} strokeWidth={1.8} />
       </button>
 
       {/* Input */}
-      <div className="flex-1 relative">
+      <div className="input-wrapper">
         <textarea
           ref={textareaRef}
           value={text}
@@ -46,13 +46,12 @@ export default function MessageInput({ onSendMessage }: MessageInputProps) {
           onKeyDown={handleKeyDown}
           placeholder="Написать сообщение..."
           rows={1}
-          className="w-full input-telegram text-white placeholder-telegram-gray rounded-xl px-4 py-2.5 outline-none resize-none text-[14px] leading-relaxed"
-          style={{ minHeight: '40px', maxHeight: '150px' }}
+          className="message-input"
         />
       </div>
 
       {/* Attach button */}
-      <button className="icon-btn w-10 h-10 rounded-full flex items-center justify-center text-telegram-gray hover:text-white flex-shrink-0">
+      <button className="icon-btn">
         <Paperclip size={22} strokeWidth={1.8} />
       </button>
 
@@ -60,12 +59,12 @@ export default function MessageInput({ onSendMessage }: MessageInputProps) {
       {text.trim() ? (
         <button
           onClick={handleSend}
-          className="icon-btn w-10 h-10 rounded-full flex items-center justify-center text-telegram-blue hover:text-white flex-shrink-0"
+          className="icon-btn send"
         >
           <Send size={22} strokeWidth={1.8} />
         </button>
       ) : (
-        <button className="icon-btn w-10 h-10 rounded-full flex items-center justify-center text-telegram-gray hover:text-white flex-shrink-0">
+        <button className="icon-btn">
           <Mic size={22} strokeWidth={1.8} />
         </button>
       )}

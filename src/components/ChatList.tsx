@@ -67,41 +67,47 @@ export default function ChatList({
   });
 
   return (
-    <div className="flex flex-col h-full bg-telegram-panel border-r border-telegram flex-shrink-0">
+    <div className="chat-list-panel">
       {/* Header */}
-      <div className="h-14 px-4 flex items-center justify-between flex-shrink-0">
-        <h1 className="text-[17px] font-medium text-white">Telegram</h1>
-        <button className="icon-btn w-10 h-10 rounded-full flex items-center justify-center text-telegram-gray hover:text-white">
+      <div className="header">
+        <h1 style={{ fontSize: '17px', fontWeight: 500, color: '#fff', flex: 1 }}>Telegram</h1>
+        <button className="icon-btn">
           <Edit3 size={20} strokeWidth={1.8} />
         </button>
       </div>
 
       {/* Search */}
-      <div className="px-3 pb-2 flex-shrink-0">
-        <div className="relative">
+      <div style={{ padding: '8px 12px' }}>
+        <div style={{ position: 'relative' }}>
           <input
             type="text"
             placeholder="Поиск"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full input-telegram text-white placeholder-telegram-gray rounded-xl px-4 py-2 pl-10 text-[14px]"
+            className="search-input"
           />
           <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-telegram-gray"
+            style={{
+              position: 'absolute',
+              left: '12px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: '16px',
+              height: '16px',
+              color: '#6c7883'
+            }}
             strokeWidth={2}
           />
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex px-3 border-b border-telegram flex-shrink-0">
+      <div className="tabs">
         {filters.map((filter) => (
           <button
             key={filter.id}
             onClick={() => onFilterChange(filter.id)}
-            className={`tab px-3 py-2.5 text-[13px] font-medium ${
-              activeFilter === filter.id ? 'active' : ''
-            }`}
+            className={`tab ${activeFilter === filter.id ? 'active' : ''}`}
           >
             {filter.label}
           </button>
@@ -109,62 +115,54 @@ export default function ChatList({
       </div>
 
       {/* Chat List */}
-      <div className="flex-1 overflow-y-auto">
+      <div style={{ flex: 1, overflowY: 'auto' }}>
         {filteredChats.map((chat) => (
           <div
             key={chat.id}
             onClick={() => onSelectChat(chat.id)}
-            className={`chat-item flex items-center px-3 py-2 ${
-              activeChatId === chat.id ? 'active' : ''
-            }`}
+            className={`chat-item ${activeChatId === chat.id ? 'active' : ''}`}
           >
             {/* Avatar */}
-            <div className="relative flex-shrink-0">
-              <div 
-                className="w-[54px] h-[54px] rounded-full flex items-center justify-center text-white font-medium text-[18px]"
-                style={{ backgroundColor: chat.avatarColor }}
-              >
-                {chat.avatar}
-              </div>
-              {chat.online && (
-                <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-[#4dcd5e] rounded-full border-2 border-telegram-panel" />
-              )}
+            <div 
+              className={`avatar ${chat.online ? 'online' : ''}`}
+              style={{ backgroundColor: chat.avatarColor }}
+            >
+              {chat.avatar}
             </div>
 
             {/* Chat Info */}
-            <div className="ml-3 flex-1 min-w-0">
-              <div className="flex justify-between items-baseline">
-                <h3 className="text-[15px] font-medium text-white truncate">
-                  {chat.name}
-                </h3>
-                <span className={`text-[12px] flex-shrink-0 ml-2 ${
-                  chat.unreadCount > 0 ? 'text-telegram-blue' : 'text-telegram-gray'
-                }`}>
-                  {formatTime(chat.lastMessageTime)}
-                </span>
+            <div className="chat-info">
+              <div className="chat-name">{chat.name}</div>
+              <div className={`chat-preview ${chat.isTyping ? 'typing' : ''}`}>
+                {chat.isTyping ? 'печатает...' : chat.lastMessage}
               </div>
-              <div className="flex justify-between items-center mt-0.5">
-                <p className="text-[14px] text-telegram-gray truncate flex-1">
-                  {chat.isTyping ? (
-                    <span className="text-telegram-blue">печатает...</span>
-                  ) : (
-                    chat.lastMessage
-                  )}
-                </p>
-                {chat.unreadCount > 0 && (
-                  <span className="ml-2 flex-shrink-0 bg-telegram-blue text-white text-[12px] font-medium rounded-full min-w-[22px] h-[22px] flex items-center justify-center px-1.5">
-                    {chat.unreadCount}
-                  </span>
-                )}
+            </div>
+
+            {/* Meta */}
+            <div className="chat-meta">
+              <div className={`chat-time ${chat.unreadCount > 0 ? 'unread' : ''}`}>
+                {formatTime(chat.lastMessageTime)}
               </div>
+              {chat.unreadCount > 0 && (
+                <div className="unread-badge">
+                  {chat.unreadCount}
+                </div>
+              )}
             </div>
           </div>
         ))}
 
         {filteredChats.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-16 text-telegram-gray">
-            <Search size={48} strokeWidth={1} className="mb-3 opacity-30" />
-            <p className="text-[14px]">Ничего не найдено</p>
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            padding: '60px 20px',
+            color: '#6c7883'
+          }}>
+            <Search size={48} strokeWidth={1} style={{ marginBottom: '12px', opacity: 0.3 }} />
+            <p style={{ fontSize: '14px' }}>Ничего не найдено</p>
           </div>
         )}
       </div>

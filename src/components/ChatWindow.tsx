@@ -45,18 +45,16 @@ export default function ChatWindow({ chat, onSendMessage, onBack }: ChatWindowPr
   const messageGroups = groupMessagesByDate();
 
   return (
-    <div className="flex flex-col h-full relative overflow-hidden">
+    <div className="chat-window-panel">
       <ChatHeader chat={chat} onBack={onBack} />
 
       {/* Messages area */}
-      <div className="flex-1 overflow-y-auto chat-bg px-4 py-3">
+      <div className="messages-container">
         {messageGroups.map((group) => (
           <div key={group.date}>
             {/* Date separator */}
-            <div className="flex justify-center my-3">
-              <span className="bg-telegram-panel/80 text-telegram-gray text-[13px] font-medium px-3 py-1 rounded-full backdrop-blur-sm">
-                {group.date}
-              </span>
+            <div className="date-separator">
+              <span className="date-separator-text">{group.date}</span>
             </div>
 
             {/* Messages */}
@@ -73,12 +71,12 @@ export default function ChatWindow({ chat, onSendMessage, onBack }: ChatWindowPr
 
         {/* Typing indicator */}
         {chat.isTyping && (
-          <div className="flex justify-start mb-1">
-            <div className="msg-incoming px-3 py-2">
-              <div className="flex gap-1">
-                <span className="w-2 h-2 bg-telegram-gray rounded-full typing-dot-1" />
-                <span className="w-2 h-2 bg-telegram-gray rounded-full typing-dot-2" />
-                <span className="w-2 h-2 bg-telegram-gray rounded-full typing-dot-3" />
+          <div className="message-row other">
+            <div className="message-bubble incoming">
+              <div className="typing-indicator">
+                <span className="typing-dot typing-dot-1" />
+                <span className="typing-dot typing-dot-2" />
+                <span className="typing-dot typing-dot-3" />
               </div>
             </div>
           </div>

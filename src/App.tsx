@@ -45,14 +45,12 @@ function App() {
         : chat
     ));
 
-    // Simulate typing
     setTimeout(() => {
       setChats(prev => prev.map(chat =>
         chat.id === chatId ? { ...chat, isTyping: true } : chat
       ));
     }, 500);
 
-    // Simulate reply
     setTimeout(() => {
       const replies = [
         'Интересно! Расскажи подробнее 👀',
@@ -95,19 +93,19 @@ function App() {
   }, []);
 
   return (
-    <div className="h-screen w-screen flex overflow-hidden bg-telegram-bg">
-      {/* Left Sidebar (70px) */}
-      <div className="hidden md:block">
-        <LeftSidebar
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          onMenuClick={() => console.log('Menu clicked')}
-          onSearchClick={() => console.log('Search clicked')}
-        />
-      </div>
+    <div className="app-container">
+      {/* Left Sidebar (70px) - hidden on mobile */}
+      <LeftSidebar
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        onMenuClick={() => {}}
+        onSearchClick={() => {}}
+      />
 
-      {/* Chat List */}
-      <div className={`${isMobileChatOpen ? 'hidden md:flex' : 'flex'} flex-col w-full md:w-[380px] lg:w-[420px] flex-shrink-0`}>
+      {/* Chat List - hidden on mobile when chat is open */}
+      <div 
+        className={`chat-list-wrapper ${isMobileChatOpen ? 'hidden-mobile' : ''}`}
+      >
         <ChatList
           chats={chats}
           activeChatId={activeChatId}
@@ -119,37 +117,42 @@ function App() {
         />
       </div>
 
-      {/* Chat Window */}
-      <div className={`${isMobileChatOpen ? 'flex' : 'hidden md:flex'} flex-col flex-1 min-w-0`}>
+      {/* Chat Window - hidden on mobile when no chat selected */}
+      <div 
+        className={`chat-window-wrapper ${!isMobileChatOpen && !activeChat ? 'hidden-mobile' : ''} ${!isMobileChatOpen && activeChat ? '' : ''}`}
+      >
         {activeChat ? (
-          <div className="h-full anim-fade">
-            <ChatWindow
-              chat={activeChat}
-              onSendMessage={handleSendMessage}
-              onBack={handleBack}
-            />
-          </div>
+          <ChatWindow
+            chat={activeChat}
+            onSendMessage={handleSendMessage}
+            onBack={handleBack}
+          />
         ) : (
-          <EmptyState />
+          <div className="chat-window-panel" style={{ alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ 
+                width: '80px', 
+                height: '80px', 
+                margin: '0 auto 16px', 
+                borderRadius: '50%', 
+                background: '#17212b',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <svg width="40" height="40" fill="none" stroke="#6c7883" viewBox="0 0 24 24" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+              </div>
+              <h2 style={{ fontSize: '20px', fontWeight: 500, color: '#6c7883', marginBottom: '8px' }}>
+                Telegram Web
+              </h2>
+              <p style={{ fontSize: '14px', color: '#6c7883' }}>
+                Выберите чат для начала общения
+              </p>
+            </div>
+          </div>
         )}
-      </div>
-    </div>
-  );
-}
-
-function EmptyState() {
-  return (
-    <div className="flex-1 flex items-center justify-center chat-bg">
-      <div className="text-center">
-        <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-telegram-panel flex items-center justify-center">
-          <svg className="w-10 h-10 text-telegram-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-          </svg>
-        </div>
-        <h2 className="text-xl font-medium text-telegram-gray mb-2">Telegram Web</h2>
-        <p className="text-[14px] text-telegram-gray">
-          Выберите чат для начала общения
-        </p>
       </div>
     </div>
   );
