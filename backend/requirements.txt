@@ -1,6 +1,7 @@
 fastapi>=0.116
 uvicorn[standard]>=0.35
-sqlalchemy>=2.0
+# asyncio support in SQLAlchemy requires greenlet — the [asyncio] extra pulls it in
+sqlalchemy[asyncio]>=2.0
 aiosqlite>=0.20
 pydantic>=2.7
 pydantic-settings>=2.2
