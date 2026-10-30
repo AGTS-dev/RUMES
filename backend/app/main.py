@@ -50,8 +50,9 @@ app.include_router(chats.router, prefix=API_PREFIX)
 app.include_router(messages.router, prefix=API_PREFIX)
 app.include_router(files.router, prefix=API_PREFIX)
 
-# Realtime WebSocket endpoint at /ws
+# Realtime WebSocket endpoints at /ws (events) and /ws/messages/read (receipts)
 app.include_router(ws.router)
+app.include_router(messages.ws_router)
 
 # Serve uploaded files
 uploads_path = Path(settings.upload_dir)

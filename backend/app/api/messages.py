@@ -1,17 +1,18 @@
 """Message endpoints: history, send, edit, delete — with realtime fan-out."""
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, WebSocket, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.api.chats import get_chat_for_member
 from app.api.deps import get_current_user
-from app.db.session import get_db
+from app.db.session import async_session_factory, get_db
 from app.models.models import ChatMember, Message, User
-from app.schemas.schemas import MessageOut, MessageSend, MessageUpdate
+from app.schemas.schemas import MessageOut, MessageReadRequest, MessageSend, MessageUpdate
 from app.ws_manager import manager
 
 router = APIRouter(prefix="/chats/{chat_id}/messages", tags=["messages"])
+ws_router = APIRouter(tags=["messages"])
 
 
 async def _member_ids(db: AsyncSession, chat_id: int) -> list[int]:
@@ -36,7 +37,7 @@ async def list_messages(
 
     stmt = (
         select(Message)
-        .where(Message.chat_id == chat_id)
+        .where(Message.chat_id == chat_id, Message.is_deleted.is_(False))
         .options(selectinload(Message.sender))
         .order_by(Message.id.desc())
         .limit(limit)
@@ -143,3 +144,53 @@ async def delete_message(
         member_ids,
     )
     return None
+
+
+async def mark_messages_read(db: AsyncSession, user: User, chat_id: int, up_to_id: int) -> None:
+    """Advance the read marker and notify other members via WebSocket."""
+    chat = await get_chat_for_member(db, chat_id, user)
+    membership = next(m for m in chat.members if m.user_id == user.id)
+    if up_to_id > membership.last_read_message_id:
+        membership.last_read_message_id = up_to_id
+        await db.flush()
+        member_ids = await _member_ids(db, chat_id)
+        await manager.broadcast_to_chat(
+            chat_id,
+            {"type": "message.read", "chat_id": chat_id, "user_id": user.id, "up_to_id": up_to_id},
+            member_ids,
+            exclude_user=user.id,
+        )
+
+
+@ws_router.websocket("/ws/messages/read")
+async def ws_mark_read(ws: WebSocket, token: str = "", db: AsyncSession = Depends(get_db)):
+    """One-shot WebSocket used by the frontend to report read receipts.
+
+    Client connects with ?token=<jwt>, sends
+    {"action":"read","chat_id":1,"up_to_id":42} and may close.
+    """
+    from app.api.deps import get_user_from_ws_token
+
+    if not token:
+        await ws.close(code=4401)
+        return
+    try:
+        user = await get_user_from_ws_token(db, token)
+    except Exception:
+        await ws.close(code=4401)
+        return
+    await ws.accept()
+    try:
+        while True:
+            event = await ws.receive_json()
+            if event.get("action") == "read":
+                # use an independent session: the injected one is bound to
+                # connection scope and never commits mid-handler
+                async with async_session_factory() as session:
+                    fresh_user = await session.get(User, user.id)
+                    await mark_messages_read(
+                        session, fresh_user, int(event.get("chat_id", 0)), int(event.get("up_to_id", 0))
+                    )
+                    await session.commit()
+    except Exception:
+        pass

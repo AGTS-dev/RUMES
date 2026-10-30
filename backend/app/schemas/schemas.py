@@ -90,6 +90,11 @@ class MessageUpdate(BaseModel):
     body: str = Field(min_length=1, max_length=4096)
 
 
+class MessageReadRequest(BaseModel):
+    chat_id: int
+    up_to_id: int
+
+
 class MessageOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
